@@ -1,0 +1,71 @@
+
+<style>
+  .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 2rem 1rem; max-width: 480px; margin: 0 auto; }
+  .reveal-btn {
+    aspect-ratio: 1;
+    border: none;
+    border-radius: 16px;
+    font-size: 2rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .reveal-btn:active { transform: scale(0.95); }
+  .reveal-btn .number { font-size: 2.2rem; font-weight: 500; line-height: 1; }
+  .reveal-btn .letter {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .reveal-btn.revealed .letter { opacity: 1; transform: translateY(0); }
+  .reset-btn {
+    display: block;
+    margin: 0.5rem auto 1.5rem;
+    padding: 8px 24px;
+    border-radius: 8px;
+    border: 0.5px solid var(--color-border-secondary);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .reset-btn:hover { background: var(--color-background-secondary); }
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Press each number to reveal its letter of the alphabet</h2>
+
+<div class="btn-grid">
+  <button class="reveal-btn" style="background:#1B4332; color:#FAF6EE;" onclick="reveal(this, 'A')" aria-label="1 reveals A">
+    <span class="number">1</span>
+    <span class="letter">A</span>
+  </button>
+  <button class="reveal-btn" style="background:#C9A84C; color:#3E1C00;" onclick="reveal(this, 'B')" aria-label="2 reveals B">
+    <span class="number">2</span>
+    <span class="letter">B</span>
+  </button>
+  <button class="reveal-btn" style="background:#6D1A36; color:#FAF6EE;" onclick="reveal(this, 'C')" aria-label="3 reveals C">
+    <span class="number">3</span>
+    <span class="letter">C</span>
+  </button>
+  <button class="reveal-btn" style="background:#3E1C00; color:#FAF6EE;" onclick="reveal(this, 'D')" aria-label="4 reveals D">
+    <span class="number">4</span>
+    <span class="letter">D</span>
+  </button>
+</div>
+
+<button class="reset-btn" onclick="resetAll()">reset</button>
+
+<script>
+  function reveal(btn, letter) {
+    btn.classList.toggle('revealed');
+  }
+  function resetAll() {
+    document.querySelectorAll('.reveal-btn').forEach(b => b.classList.remove('revealed'));
+  }
+</script>
