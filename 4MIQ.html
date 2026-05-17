@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Four Most Important Questions — Olivier Expressions</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #e9d7a1;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 680px;
+    background: #1D1311;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 0.5px solid #443315;
+  }
+
+  .nav {
+    background: #1D1311;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.5px solid #443315;
+  }
+  .nav-brand { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #B8A050; font-weight: 500; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* WELCOME SCREEN */
+  .welcome-hero {
+    background: #F7F6F2;
+    padding: 3rem 2rem 2.5rem;
+  }
+  .eyebrow { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A050; font-weight: 500; margin-bottom: 14px; }
+  .h1 { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 400; color: #312E27; line-height: 1.25; margin-bottom: 10px; }
+  .h1 em { color: #B8A050; font-style: italic; }
+  .subtitle { font-size: 13px; color: #312E27; opacity: 0.65; line-height: 1.7; margin-bottom: 1.5rem; font-weight: 300; }
+  .gold-divider { width: 40px; height: 1.5px; background: #B8A050; margin-bottom: 1.5rem; }
+
+  .welcome-meta {
+    background: #2a1c14;
+    padding: 2rem;
+  }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 2rem; }
+  .meta-card {
+    background: #1D1311;
+    border: 0.5px solid #443315;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+  }
+  .meta-card-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #B8A050; font-weight: 500; margin-bottom: 6px; }
+  .meta-card-value { font-size: 12px; color: #F7F6F2; opacity: 0.7; font-weight: 300; line-height: 1.5; }
+
+  .quote-block {
+    border-left: 2px solid #B8A050;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .quote-block p { font-family: 'Playfair Display', serif; font-size: 14px; font-style: italic; color: #F7F6F2; opacity: 0.8; line-height: 1.6; letter-spacing: 0.1em;}
+
+  /* PRE-LESSON SCREEN */
+  .prelesson-hero {
+    background: #F7F6F2;
+    padding: 3rem 2rem 2.5rem;
+  }
+  .prelesson-body {
+    background: #1D1311;
+    padding: 2rem;
+  }
+  .concept-card {
+    background: #2a1c14;
+    border: 0.5px solid #443315;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .concept-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .tag-end { background: #B8A050; color: #1D1311; }
+  .tag-means { background: transparent; color: #B8A050; border: 1px solid #B8A050; }
+  .concept-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 400; color: #F7F6F2; margin-bottom: 8px; }
+  .concept-body { font-size: 12px; color: #F7F6F2; opacity: 0.6; line-height: 1.7; font-weight: 300; }
+  .concept-examples { margin-top: 10px; }
+  .concept-examples span {
+    display: inline-block;
+    font-size: 11px;
+    color: #B8A050;
+    opacity: 0.8;
+    background: #1D1311;
+    border-radius: 6px;
+    padding: 3px 10px;
+    margin: 3px 3px 0 0;
+    font-weight: 400;
+  }
+
+  .why-card {
+    background: #2a1c14;
+    border: 0.5px solid #443315;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .why-num { font-size: 22px; font-family: 'Playfair Display', serif; color: #B8A050; font-weight: 400; line-height: 1; min-width: 28px; }
+  .why-text { font-size: 12px; color: #F7F6F2; opacity: 0.65; line-height: 1.6; font-weight: 300; }
+  .why-text strong { color: #F7F6F2; opacity: 1; font-weight: 500; }
+
+  /* QUESTION SCREENS */
+  .question-hero {
+    background: #F7F6F2;
+    padding: 2.5rem 2rem 2rem;
+  }
+  .progress-wrap { margin-bottom: 1.5rem; }
+  .progress-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #B8A050; font-weight: 500; margin-bottom: 8px; }
+  .progress-track { background: #443315; border-radius: 4px; height: 3px; width: 100%; }
+  .progress-fill { background: #B8A050; border-radius: 4px; height: 3px; transition: width 0.4s ease; }
+
+  .q-number { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #B8A050; font-weight: 500; margin-bottom: 6px; }
+  .q-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 400; color: #312E27; line-height: 1.3; margin-bottom: 10px; }
+  .q-subtitle { font-size: 12px; color: #312E27; opacity: 0.6; line-height: 1.7; font-weight: 300; }
+
+  .question-body { background: #1D1311; padding: 2rem; }
+  .context-card {
+    background: #2a1c14;
+    border: 0.5px solid #443315;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #B8A050; font-weight: 500; margin-bottom: 8px; }
+  .context-text { font-size: 12px; color: #F7F6F2; opacity: 0.65; line-height: 1.7; font-weight: 300; }
+
+  .answer-wrap {
+    background: #2a1c14;
+    border: 0.5px solid #B8A050;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .answer-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #B8A050; font-weight: 500; margin-bottom: 10px; display: block; }
+  .answer-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 13px;
+    color: #F7F6F2;
+    line-height: 1.8;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+  }
+  .answer-textarea::placeholder { color: #F7F6F2; opacity: 0.25; font-style: italic; }
+
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  /* CELEBRATION SCREEN */
+  .celebration-hero {
+    background: #F7F6F2;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+  }
+  .star { font-size: 28px; margin-bottom: 1rem; color: #B8A050; letter-spacing: 8px; }
+  .celebration-body { background: #1D1311; padding: 2rem; }
+  .summary-card {
+    background: #2a1c14;
+    border: 0.5px solid #443315;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 10px;
+  }
+  .summary-q { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #B8A050; font-weight: 500; margin-bottom: 6px; }
+  .summary-a { font-size: 12px; color: #F7F6F2; opacity: 0.7; line-height: 1.6; font-weight: 300; font-style: italic; }
+
+  /* FOOTER */
+  .footer {
+    background: #1D1311;
+    padding: 1.25rem 2rem;
+    border-top: 0.5px solid #443315;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-badge {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #B8A050;
+    border: 0.5px solid #B8A050;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .footer-brand { font-size: 10px; color: #F7F6F2; opacity: 0.3; letter-spacing: 0.1em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <div class="nav">
+    <span class="nav-brand">Olivier Expressions &nbsp;·&nbsp; The Incandescent Founder™</span>
+  </div>
+
+  <!-- SCREEN 1: WELCOME -->
+  <div class="screen active" id="screen-welcome">
+    <div class="welcome-hero">
+      <p class="eyebrow">Self-Possibility Pillar &nbsp;·&nbsp; Foundation Playbook</p>
+      <h1 class="h1">The Four Most <em>Important</em> Questions</h1>
+      <p class="subtitle">A blueprint for your soul — defining the experiences, growth, contribution, and identity that shape your most authentic life.</p>
+      <div class="gold-divider"></div>
+      <div class="btn-row">
+        <button onclick="goTo('screen-prelesson')" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">I Am Ready To Begin</button>
+      </div>
+    </div>
+    <div class="welcome-meta">
+      <div class="meta-grid">
+        <div class="meta-card">
+          <p class="meta-card-label">What This Is</p>
+          <p class="meta-card-value">A soul-level reflection exercise with 4 questions that define your authentic life path.</p>
+        </div>
+        <div class="meta-card">
+          <p class="meta-card-label">Time Needed</p>
+          <p class="meta-card-value">15–30 minutes. Find a quiet space. Let yourself go deep.</p>
+        </div>
+        <div class="meta-card">
+          <p class="meta-card-label">How It Works</p>
+          <p class="meta-card-value">Answer each question freely. No limits. No editing. At the end, download your blueprint.</p>
+        </div>
+        <div class="meta-card">
+          <p class="meta-card-label">Your Answers</p>
+          <p class="meta-card-value">Kept exactly as you write them. Your tone today is a time capsule for your future self.</p>
+        </div>
+      </div>
+      <div class="quote-block">
+        <p>"These 4 questions serve as a blueprint for your soul — helping you understand your deepest desires for experience, growth, and contribution, while showing you who you need to be to create them."</p>
+      </div>
+      <div class="btn-row">
+        <button onclick="goTo('screen-prelesson')" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Begin &rarr;</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-badge">Incandescent Founder™</span>
+      <span class="footer-brand">Olivier Expressions</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: PRE-LESSON -->
+  <div class="screen" id="screen-prelesson">
+    <div class="prelesson-hero">
+      <p class="eyebrow">Before You Begin</p>
+      <h1 class="h1" style="font-size:26px;">End Goals vs. <em>Means Goals</em></h1>
+      <p class="subtitle">Understanding this distinction is the key to making the 4MIQ truly powerful. Your answers must come from soul — not ego.</p>
+      <div class="gold-divider"></div>
+    </div>
+    <div class="prelesson-body">
+      <div class="concept-card">
+        <span class="concept-tag tag-end">End Goal</span>
+        <p class="concept-title">The Final Destination</p>
+        <p class="concept-body">The ultimate experiences, feelings, and states of being you desire. They answer: "What do I truly want to feel and experience in my life?" These are the things that make life worth living.</p>
+        <div class="concept-examples">
+          <span>Deep love & connection</span>
+          <span>Creative flow</span>
+          <span>Adventure</span>
+          <span>Helping others</span>
+          <span>Financial freedom</span>
+        </div>
+      </div>
+      <div class="concept-card">
+        <span class="concept-tag tag-means">Means Goal</span>
+        <p class="concept-title">The Vehicle — Not The Destination</p>
+        <p class="concept-body">The methods or things you believe you need to achieve your end goals. They are not wrong — they just aren't the truth of what you want. Ask "why?" and the answer is always the real goal.</p>
+        <div class="concept-examples">
+          <span>Get a promotion</span>
+          <span>Earn $200k/yr</span>
+          <span>Get a law degree</span>
+          <span>Lose 20 lbs</span>
+        </div>
+      </div>
+
+      <div style="margin: 1.5rem 0 1rem;">
+        <p style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#B8A050; font-weight:500; margin-bottom:1rem;">Why This Matters</p>
+        <div class="why-card">
+          <span class="why-num">1</span>
+          <p class="why-text"><strong>Avoid the "Stupid" Trap.</strong> Spending your life doing things you don't like simply to go on living — so you can keep doing things you don't like. End goals keep the path joyful.</p>
+        </div>
+        <div class="why-card">
+          <span class="why-num">2</span>
+          <p class="why-text"><strong>Tap Into True Motivation.</strong> End goals connect directly to your heart. They are fueled by passion and intrinsic desire — not logic and grind.</p>
+        </div>
+        <div class="why-card">
+          <span class="why-num">3</span>
+          <p class="why-text"><strong>Open Up To More Possibilities.</strong> Focusing on an end goal allows the universe to present multiple pathways. One means goal closes you off. One end goal opens everything.</p>
+        </div>
+      </div>
+
+      <div class="quote-block" style="margin-bottom: 2rem;">
+        <p>"By focusing on the end experiences you want to have, you create a blueprint for your soul that is authentic and deeply motivating."</p>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="goTo('screen-welcome')" style="background-color:transparent; color:#B8A050; border:1.5px solid #B8A050; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Back</button>
+        <button onclick="goTo('screen-q1')" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">I Understand — Let's Begin &rarr;</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-badge">Incandescent Founder™</span>
+      <span class="footer-brand">Olivier Expressions</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: QUESTION 1 -->
+  <div class="screen" id="screen-q1">
+    <div class="question-hero">
+      <div class="progress-wrap">
+        <p class="progress-label">Question 1 of 4</p>
+        <div class="progress-track"><div class="progress-fill" style="width:25%;"></div></div>
+      </div>
+      <p class="q-number">Question 01</p>
+      <h2 class="q-title">How Do You Want To <em style="color:#B8A050; font-style:italic;">Experience</em> Life?</h2>
+      <p class="q-subtitle">Define the experiences, feelings, and states of being you want to cultivate. Think in end goals — not means.</p>
+      <div class="gold-divider" style="margin-top:1rem;"></div>
+    </div>
+    <div class="question-body">
+      <div class="context-card">
+        <p class="context-label">How To Think About This</p>
+        <p class="context-text">Close your eyes for a moment. Imagine your life with no financial limits, no fear, no judgment. What are you doing? How do you feel waking up each morning? What relationships surround you? What adventures have you lived? Write whatever comes — feelings, places, moments, states of being. There is no wrong answer here.</p>
+      </div>
+      <div class="answer-wrap">
+        <span class="answer-label">Your Answer</span>
+        <textarea class="answer-textarea" id="answer-1" rows="8" placeholder="I want to experience deep love and connection. I want to wake up feeling certain and alive. I want to travel without worry, create freely, and feel the rush of building something that matters..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button onclick="goTo('screen-prelesson')" style="background-color:transparent; color:#B8A050; border:1.5px solid #B8A050; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Back</button>
+        <button onclick="nextQuestion('screen-q2')" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Continue &rarr;</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-badge">Incandescent Founder™</span>
+      <span class="footer-brand">Olivier Expressions</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: QUESTION 2 -->
+  <div class="screen" id="screen-q2">
+    <div class="question-hero">
+      <div class="progress-wrap">
+        <p class="progress-label">Question 2 of 4</p>
+        <div class="progress-track"><div class="progress-fill" style="width:50%;"></div></div>
+      </div>
+      <p class="q-number">Question 02</p>
+      <h2 class="q-title">How Do You Want To <em style="color:#B8A050; font-style:italic;">Contribute?</em></h2>
+      <p class="q-subtitle">Your life is not just about you. It is about the lives of everyone you touch. How do you want to give back to the world?</p>
+      <div class="gold-divider" style="margin-top:1rem;"></div>
+    </div>
+    <div class="question-body">
+      <div class="context-card">
+        <p class="context-label">How To Think About This</p>
+        <p class="context-text">Your contribution can be through your creations, your time, your service, your knowledge, your money, or your connections. Think about the ripple effect of your life. Who do you want to have impacted? What legacy do you want to leave? What does the world look like because you were in it?</p>
+      </div>
+      <div class="answer-wrap">
+        <span class="answer-label">Your Answer</span>
+        <textarea class="answer-textarea" id="answer-2" rows="8" placeholder="I want to contribute by showing women that they are enough exactly as they are. I want to create resources that outlive me. I want to give generously — my time, my knowledge, my presence..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button onclick="goTo('screen-q1')" style="background-color:transparent; color:#B8A050; border:1.5px solid #B8A050; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Back</button>
+        <button onclick="nextQuestion('screen-q3')" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Continue &rarr;</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-badge">Incandescent Founder™</span>
+      <span class="footer-brand">Olivier Expressions</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: QUESTION 3 -->
+  <div class="screen" id="screen-q3">
+    <div class="question-hero">
+      <div class="progress-wrap">
+        <p class="progress-label">Question 3 of 4</p>
+        <div class="progress-track"><div class="progress-fill" style="width:75%;"></div></div>
+      </div>
+      <p class="q-number">Question 03</p>
+      <h2 class="q-title">How Do You Want To <em style="color:#B8A050; font-style:italic;">Grow?</em></h2>
+      <p class="q-subtitle">Now that you know your experiences and contributions — where must you grow to be able to hold them?</p>
+      <div class="gold-divider" style="margin-top:1rem;"></div>
+    </div>
+    <div class="question-body">
+      <div class="context-card">
+        <p class="context-label">How To Think About This</p>
+        <p class="context-text">Think beyond credentials and titles. Think about the skills, the wisdom, the emotional capacity, and the inner strength you want to develop. What does the version of you who has already lived those experiences know how to do? Who has she become? What did she learn to hold?</p>
+      </div>
+      <div class="answer-wrap">
+        <span class="answer-label">Your Answer</span>
+        <textarea class="answer-textarea" id="answer-3" rows="8" placeholder="I want to grow into a woman who trusts herself completely. I want to develop my speaking voice, my emotional resilience, my ability to receive without guilt. I want to master the art of rest as a strategy..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button onclick="goTo('screen-q2')" style="background-color:transparent; color:#B8A050; border:1.5px solid #B8A050; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Back</button>
+        <button onclick="nextQuestion('screen-q4')" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Continue &rarr;</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-badge">Incandescent Founder™</span>
+      <span class="footer-brand">Olivier Expressions</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 6: QUESTION 4 -->
+  <div class="screen" id="screen-q4">
+    <div class="question-hero">
+      <div class="progress-wrap">
+        <p class="progress-label">Question 4 of 4</p>
+        <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+      </div>
+      <p class="q-number">Question 04 &nbsp;·&nbsp; The Launch Pad</p>
+      <h2 class="q-title">Who Do You Need <em style="color:#B8A050; font-style:italic;">To Be?</em></h2>
+      <p class="q-subtitle">This is Anri's addition to the original 3MIQ. Character is the launch pad for everything else.</p>
+      <div class="gold-divider" style="margin-top:1rem;"></div>
+    </div>
+    <div class="question-body">
+      <div class="context-card">
+        <p class="context-label">How To Think About This</p>
+        <p class="context-text">Who do you need to be in order to create these dreams — to receive them, to hold them, and to expand them? Because what you do is only as powerful as how you do it. Who you are being while executing a goal determines the power of the ripple effect. She knows she deserves it. She can hold it. She can multiply it. She does not self-sabotage or run away.</p>
+      </div>
+      <div class="answer-wrap">
+        <span class="answer-label">Your Answer</span>
+        <textarea class="answer-textarea" id="answer-4" rows="8" placeholder="I need to be a woman who moves from certainty, not fear. Who receives without guilt. Who leads with love and holds her standards with grace. Who says yes to herself first — every single time..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button onclick="goTo('screen-q3')" style="background-color:transparent; color:#B8A050; border:1.5px solid #B8A050; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Back</button>
+        <button onclick="showCelebration()" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Complete My Blueprint &rarr;</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-badge">Incandescent Founder™</span>
+      <span class="footer-brand">Olivier Expressions</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 7: CELEBRATION -->
+  <div class="screen" id="screen-celebration">
+    <div class="celebration-hero">
+      <div class="star">✦ ✧ ✦</div>
+      <p class="eyebrow" style="text-align:center;">Your Blueprint Is Complete</p>
+      <h1 class="h1" style="text-align:center; font-size:28px;">You Just Did <em>The Work.</em></h1>
+      <p class="subtitle" style="text-align:center; margin: 0 auto;">These answers are yours. Read them often. Let them be the compass your future self already trusts.</p>
+      <div class="gold-divider" style="margin: 1.5rem auto;"></div>
+      <div class="btn-row" style="justify-content:center;">
+        <button onclick="downloadPDF()" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Download My Blueprint</button>
+      </div>
+    </div>
+    <div class="celebration-body">
+      <p style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#B8A050; font-weight:500; margin-bottom:1rem;">Your Answers</p>
+      <div class="summary-card">
+        <p class="summary-q">01 &nbsp;·&nbsp; How I Want To Experience Life</p>
+        <p class="summary-a" id="summary-1"></p>
+      </div>
+      <div class="summary-card">
+        <p class="summary-q">02 &nbsp;·&nbsp; How I Want To Contribute</p>
+        <p class="summary-a" id="summary-2"></p>
+      </div>
+      <div class="summary-card">
+        <p class="summary-q">03 &nbsp;·&nbsp; How I Want To Grow</p>
+        <p class="summary-a" id="summary-3"></p>
+      </div>
+      <div class="summary-card">
+        <p class="summary-q">04 &nbsp;·&nbsp; Who I Need To Be</p>
+        <p class="summary-a" id="summary-4"></p>
+      </div>
+
+      <div class="quote-block" style="margin-top:1.5rem;">
+        <p>"Your life isn't waiting for more preparation or permission. It's waiting for participation."</p>
+      </div>
+
+      <div class="btn-row" style="margin-top:1.5rem;">
+        <button onclick="downloadPDF()" style="background-color:#B8A050; color:#1D1311; border:none; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Download My Blueprint</button>
+        <button onclick="goTo('screen-welcome')" style="background-color:transparent; color:#B8A050; border:1.5px solid #B8A050; border-radius:8px; padding:12px 28px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;">Start Again</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-badge">Incandescent Founder™</span>
+      <span class="footer-brand">Olivier Expressions</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function goTo(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function nextQuestion(screenId) {
+    goTo(screenId);
+  }
+
+  function showCelebration() {
+    document.getElementById('summary-1').textContent = document.getElementById('answer-1').value || 'No answer provided.';
+    document.getElementById('summary-2').textContent = document.getElementById('answer-2').value || 'No answer provided.';
+    document.getElementById('summary-3').textContent = document.getElementById('answer-3').value || 'No answer provided.';
+    document.getElementById('summary-4').textContent = document.getElementById('answer-4').value || 'No answer provided.';
+    goTo('screen-celebration');
+  }
+
+  function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210;
+    const margin = 20;
+    const contentW = W - margin * 2;
+    let y = 0;
+
+    const gold = [184, 160, 80];
+    const espresso = [29, 19, 17];
+    const ivory = [247, 246, 242];
+    const warmBlack = [49, 46, 39];
+    const darkCard = [42, 28, 20];
+
+    function addPage() {
+      doc.addPage();
+      y = 20;
+      doc.setFillColor(...espresso);
+      doc.rect(0, 0, W, 297, 'F');
+    }
+
+    function wrapText(text, x, maxW, lineH, fontSize) {
+      doc.setFontSize(fontSize);
+      const lines = doc.splitTextToSize(text, maxW);
+      lines.forEach(line => {
+        if (y > 270) addPage();
+        doc.text(line, x, y);
+        y += lineH;
+      });
+      return lines.length;
+    }
+
+    doc.setFillColor(...ivory);
+    doc.rect(0, 0, W, 297, 'F');
+
+    doc.setFillColor(...gold);
+    doc.rect(0, 0, W, 2, 'F');
+
+    y = 24;
+    doc.setFontSize(8);
+    doc.setTextColor(...gold);
+    doc.setFont('helvetica', 'normal');
+    doc.text('OLIVIER EXPRESSIONS  ·  THE INCANDESCENT FOUNDER™', margin, y);
+    y += 6;
+    doc.setFillColor(...gold);
+    doc.rect(margin, y, 30, 0.5, 'F');
+    y += 12;
+
+    doc.setFontSize(24);
+    doc.setTextColor(...warmBlack);
+    doc.setFont('times', 'italic');
+    doc.text('The Four Most Important Questions', margin, y);
+    y += 10;
+
+    doc.setFontSize(10);
+    doc.setTextColor(...warmBlack);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(warmBlack[0], warmBlack[1], warmBlack[2], 0.6);
+    doc.text('A blueprint for your soul — created on ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}), margin, y);
+    y += 6;
+
+    doc.setFillColor(...gold);
+    doc.rect(margin, y, 25, 1, 'F');
+    y += 16;
+
+    const answers = [
+      { q: '01  ·  HOW I WANT TO EXPERIENCE LIFE', a: document.getElementById('answer-1').value || 'No answer provided.' },
+      { q: '02  ·  HOW I WANT TO CONTRIBUTE', a: document.getElementById('answer-2').value || 'No answer provided.' },
+      { q: '03  ·  HOW I WANT TO GROW', a: document.getElementById('answer-3').value || 'No answer provided.' },
+      { q: '04  ·  WHO I NEED TO BE', a: document.getElementById('answer-4').value || 'No answer provided.' },
+    ];
+
+    answers.forEach((item, i) => {
+      const aLines = doc.splitTextToSize(item.a, contentW - 12);
+      const blockH = 8 + 6 + (aLines.length * 5.5) + 14;
+
+      if (y + blockH > 275) {
+        doc.addPage();
+        y = 20;
+        doc.setFillColor(...ivory);
+        doc.rect(0, 0, W, 297, 'F');
+        doc.setFillColor(...gold);
+        doc.rect(0, 0, W, 2, 'F');
+      }
+
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(margin, y, contentW, blockH, 3, 3, 'F');
+      doc.setDrawColor(...gold);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(margin, y, contentW, blockH, 3, 3, 'S');
+
+      y += 6;
+      doc.setFontSize(7.5);
+      doc.setTextColor(...gold);
+      doc.setFont('helvetica', 'bold');
+      doc.text(item.q, margin + 6, y);
+      y += 6;
+
+      doc.setFillColor(...gold);
+      doc.rect(margin + 6, y, 15, 0.4, 'F');
+      y += 5;
+
+      doc.setFontSize(10);
+      doc.setTextColor(...warmBlack);
+      doc.setFont('times', 'italic');
+      aLines.forEach(line => {
+        doc.text(line, margin + 6, y);
+        y += 5.5;
+      });
+      y += 8;
+    });
+
+    if (y + 30 > 275) {
+      doc.addPage();
+      y = 20;
+      doc.setFillColor(...ivory);
+      doc.rect(0, 0, W, 297, 'F');
+      doc.setFillColor(...gold);
+      doc.rect(0, 0, W, 2, 'F');
+    }
+
+    y += 4;
+    doc.setFillColor(...gold);
+    doc.rect(margin, y, contentW, 0.5, 'F');
+    y += 8;
+
+    doc.setFontSize(9);
+    doc.setTextColor(...gold);
+    doc.setFont('times', 'italic');
+    doc.text('"Your life isn\'t waiting for more preparation or permission. It\'s waiting for participation."', margin, y, { maxWidth: contentW });
+    y += 8;
+
+    doc.setFontSize(7);
+    doc.setTextColor(...warmBlack);
+    doc.setFont('helvetica', 'normal');
+    doc.text('— Anri Olivier  ·  Olivier Expressions  ·  incandescentfounder.com', margin, y);
+
+    doc.save('My-4MIQ-Blueprint-OlivierExpressions.pdf');
+  }
+</script>
+
+</body>
+</html>
