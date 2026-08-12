@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Frustration → Instead Prompt | The Incandescent Founder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700&family=Yellowtail&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<style>
+  :root{
+    --white:#ffffff;
+    --ivory:#f8f6f2;
+    --linen:#f5f0e6;
+    --vanilla:#ede3c7;
+    --custard:#e9d7a1;
+    --metallic-gold:#d4af37;
+    --bronze-gold:#c8a34b;
+    --gold:#b28900;
+    --antique-gold:#9c7b34;
+    --milk-choc:#6c4d2d;
+    --espresso:#2c2316;
+    --black:#000800;
+    --hunters-green:#2e5a38;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    padding:0;
+    background:var(--white);
+    color:var(--black);
+    font-family:'Montserrat', sans-serif;
+    font-weight:500;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .hero{
+    background:var(--ivory);
+    padding:72px 40px 56px;
+    text-align:center;
+  }
+
+  .hero-mark{
+    font-family:'Cinzel Decorative', serif;
+    font-weight:700;
+    font-size:clamp(26px, 4vw, 34px);
+    color:var(--espresso);
+    letter-spacing:0.02em;
+  }
+
+  .hero-script{
+    font-family:'Yellowtail', cursive;
+    font-size:30px;
+    color:var(--antique-gold);
+    margin-top:10px;
+    display:block;
+  }
+
+  .page{
+    max-width:720px;
+    margin:0 auto;
+    padding:56px 28px 96px;
+  }
+
+  .eyebrow{
+    font-family:'Playfair Display', serif;
+    font-size:13px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:12px;
+  }
+
+  h1{
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:clamp(28px, 4.5vw, 38px);
+    line-height:1.25;
+    margin:0 0 18px;
+    color:var(--espresso);
+  }
+
+  h1 em{
+    font-style:italic;
+    color:var(--gold);
+  }
+
+  .intro{
+    font-family:'Montserrat', sans-serif;
+    font-weight:500;
+    font-size:16px;
+    line-height:1.7;
+    color:var(--black);
+    max-width:56ch;
+    margin:0 0 20px;
+  }
+
+  .signature-line{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:17px;
+    color:var(--antique-gold);
+    margin:0 0 48px;
+  }
+
+  .step{
+    margin-bottom:40px;
+  }
+
+  .step-label{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:10px;
+  }
+
+  .step-number{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    color:var(--gold);
+    font-size:14px;
+    letter-spacing:0.04em;
+  }
+
+  .step-title{
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:23px;
+    color:var(--espresso);
+  }
+
+  .step-sub{
+    font-size:14.5px;
+    line-height:1.65;
+    color:var(--milk-choc);
+    margin:0 0 16px;
+    max-width:58ch;
+  }
+
+  .prompts-list{
+    margin:10px 0 18px;
+    padding:0;
+    list-style:none;
+  }
+
+  .prompts-list li{
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--milk-choc);
+    padding-left:16px;
+    position:relative;
+    margin-bottom:5px;
+  }
+
+  .prompts-list li::before{
+    content:"—";
+    position:absolute;
+    left:0;
+    color:var(--gold);
+  }
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--vanilla);
+    border-radius:11px;
+    padding:22px 22px 18px;
+  }
+
+  .card textarea{
+    width:100%;
+    min-height:110px;
+    background:transparent;
+    border:none;
+    outline:none;
+    resize:vertical;
+    color:var(--black);
+    font-family:'Montserrat', sans-serif;
+    font-weight:500;
+    font-size:15px;
+    line-height:1.6;
+    padding:0;
+  }
+
+  .card textarea::placeholder{
+    color:#a89a82;
+    font-style:italic;
+  }
+
+  .char-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:10px;
+  }
+
+  .char-count{
+    font-size:11px;
+    letter-spacing:0.04em;
+    color:#a89a82;
+  }
+
+  .bridge{
+    margin:44px 0 44px;
+    text-align:center;
+    opacity:0;
+    max-height:0;
+    overflow:hidden;
+    transition:opacity 0.6s ease, max-height 0.6s ease;
+    background:var(--linen);
+    border-radius:11px;
+  }
+
+  .bridge.visible{
+    opacity:1;
+    max-height:220px;
+    padding:28px 24px;
+  }
+
+  .bridge-label{
+    font-family:'Yellowtail', cursive;
+    font-size:28px;
+    color:var(--antique-gold);
+    display:block;
+  }
+
+  .bridge-line{
+    width:36px;
+    height:2px;
+    background:var(--hunters-green);
+    margin:12px auto 12px;
+  }
+
+  .bridge-copy{
+    font-size:13.5px;
+    color:var(--milk-choc);
+    max-width:44ch;
+    margin:0 auto;
+    line-height:1.6;
+  }
+
+  .actions{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+
+  button{
+    font-family:'Montserrat', sans-serif;
+    font-weight:500;
+    font-size:14px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:16px 30px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:all 0.2s ease;
+    border:1px solid transparent;
+  }
+
+  .btn-primary{
+    background:var(--metallic-gold);
+    color:var(--espresso);
+  }
+  .btn-primary:hover{
+    background:var(--bronze-gold);
+  }
+  .btn-primary:disabled{
+    background:var(--vanilla);
+    color:#a89a82;
+    cursor:not-allowed;
+  }
+
+  .btn-secondary{
+    background:var(--linen);
+    color:var(--antique-gold);
+    border:1px solid var(--bronze-gold);
+  }
+  .btn-secondary:hover{
+    background:var(--vanilla);
+  }
+  .btn-secondary:disabled{
+    color:#a89a82;
+    border-color:var(--vanilla);
+    background:var(--ivory);
+    cursor:not-allowed;
+  }
+
+  .status-msg{
+    font-size:12px;
+    color:var(--antique-gold);
+    margin-top:12px;
+    height:14px;
+    opacity:0;
+    transition:opacity 0.3s ease;
+  }
+  .status-msg.show{ opacity:1; }
+
+  .footer{
+    background:var(--espresso);
+    padding:40px 28px;
+    text-align:center;
+    margin-top:16px;
+  }
+
+  .footer-mark{
+    font-family:'Cinzel Decorative', serif;
+    font-weight:700;
+    font-size:16px;
+    color:var(--metallic-gold);
+  }
+
+  .footer-sub{
+    font-family:'Montserrat', sans-serif;
+    font-size:12px;
+    color:var(--linen);
+    margin-top:8px;
+  }
+
+  @media (max-width:600px){
+    .page{ padding:44px 20px 72px; }
+    .hero{ padding:56px 24px 44px; }
+    .actions{ flex-direction:column; }
+    button{ width:100%; }
+  }
+
+  #pdf-render{
+    position:fixed;
+    left:-9999px;
+    top:0;
+    width:680px;
+    background:#ffffff;
+    color:#000800;
+    font-family:'Montserrat', sans-serif;
+    padding:56px 52px;
+  }
+  #pdf-render .pr-mark{
+    font-family:'Cinzel Decorative', serif;
+    font-weight:700;
+    font-size:20px;
+    color:#2c2316;
+    margin-bottom:6px;
+  }
+  #pdf-render .pr-eyebrow{
+    font-family:'Yellowtail', cursive;
+    font-size:30px;
+    color:#9c7b34;
+    display:block;
+  }
+  #pdf-render h1{
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:28px;
+    color:#2c2316;
+    margin:6px 0 24px;
+  }
+  #pdf-render .pr-block{
+    margin-bottom:26px;
+  }
+  #pdf-render .pr-label{
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    font-size:16px;
+    color:#2c2316;
+    margin-bottom:8px;
+    border-bottom:2px solid #d4af37;
+    display:inline-block;
+    padding-bottom:3px;
+  }
+  #pdf-render .pr-text{
+    font-size:14px;
+    line-height:1.7;
+    color:#000800;
+    white-space:pre-wrap;
+  }
+  #pdf-render .pr-footer{
+    margin-top:36px;
+    padding-top:16px;
+    border-top:1px solid #ede3c7;
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:13px;
+    color:#9c7b34;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-mark">THE INCANDESCENT FOUNDER</div>
+  <span class="hero-script">reflect</span>
+</div>
+
+<div class="page">
+
+  <div class="eyebrow">This Week's Prompt</div>
+  <h1>The Frustration <em>&amp; the</em> Instead</h1>
+  <p class="intro">Straight from this week's session — five minutes, two questions. Don't worry about the bridge yet. Just get honest about what's true right now, and what you wish were true instead.</p>
+  <p class="signature-line">Build the woman first. The business follows.</p>
+
+  <div class="step">
+    <div class="step-label">
+      <span class="step-number">One</span>
+      <span class="step-title">The Frustration</span>
+    </div>
+    <p class="step-sub">Think about your day to day. What are you doing every single day? What are you repeating — tasks, automations, questions?</p>
+    <ul class="prompts-list">
+      <li>What's frustrating you, holding you back?</li>
+      <li>What do you keep saying you'll fix, and never do?</li>
+    </ul>
+    <div class="card">
+      <textarea id="frustration" placeholder="Right now, what's frustrating me is..." maxlength="600"></textarea>
+    </div>
+    <div class="char-row"><span class="char-count"><span id="count-frustration">0</span> / 600</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-label">
+      <span class="step-number">Two</span>
+      <span class="step-title">The Instead</span>
+    </div>
+    <p class="step-sub">Don't worry about the bridge — just think about where you want to spend your time instead.</p>
+    <ul class="prompts-list">
+      <li>What do you wish you did less of?</li>
+      <li>What do you wish you could delegate — to AI, an employee, or a VA?</li>
+      <li>What would let you focus on your business, instead of being stuck in it?</li>
+    </ul>
+    <div class="card">
+      <textarea id="instead" placeholder="Instead, I wish..." maxlength="600"></textarea>
+    </div>
+    <div class="char-row"><span class="char-count"><span id="count-instead">0</span> / 600</span></div>
+  </div>
+
+  <div class="bridge" id="bridge">
+    <span class="bridge-label">the bridge comes next</span>
+    <div class="bridge-line"></div>
+    <p class="bridge-copy">You've named both sides. Bring this Thursday — we build the bridge together.</p>
+  </div>
+
+  <div class="actions">
+    <button class="btn-primary" id="download-btn" disabled>Download as PDF</button>
+    <button class="btn-secondary" id="copy-btn" disabled>Copy to Clipboard</button>
+  </div>
+  <div class="status-msg" id="status-msg"></div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-mark">OLIVIER EXPRESSIONS</div>
+  <div class="footer-sub">The Incandescent Founder™</div>
+</div>
+
+<div id="pdf-render">
+  <div class="pr-mark">OLIVIER EXPRESSIONS</div>
+  <span class="pr-eyebrow">reflect</span>
+  <h1>The Frustration &amp; the Instead</h1>
+  <div class="pr-block">
+    <div class="pr-label">The Frustration</div>
+    <div class="pr-text" id="pr-frustration"></div>
+  </div>
+  <div class="pr-block">
+    <div class="pr-label">The Instead</div>
+    <div class="pr-text" id="pr-instead"></div>
+  </div>
+  <div class="pr-footer">Build the woman first. The business follows.</div>
+</div>
+
+<script>
+  const frustrationEl = document.getElementById('frustration');
+  const insteadEl = document.getElementById('instead');
+  const countF = document.getElementById('count-frustration');
+  const countI = document.getElementById('count-instead');
+  const bridge = document.getElementById('bridge');
+  const downloadBtn = document.getElementById('download-btn');
+  const copyBtn = document.getElementById('copy-btn');
+  const statusMsg = document.getElementById('status-msg');
+
+  function updateState(){
+    const f = frustrationEl.value.trim();
+    const i = insteadEl.value.trim();
+    countF.textContent = frustrationEl.value.length;
+    countI.textContent = insteadEl.value.length;
+
+    const bothFilled = f.length > 0 && i.length > 0;
+    downloadBtn.disabled = !bothFilled;
+    copyBtn.disabled = !bothFilled;
+    bridge.classList.toggle('visible', bothFilled);
+  }
+
+  frustrationEl.addEventListener('input', updateState);
+  insteadEl.addEventListener('input', updateState);
+
+  function showStatus(msg){
+    statusMsg.textContent = msg;
+    statusMsg.classList.add('show');
+    setTimeout(() => statusMsg.classList.remove('show'), 2400);
+  }
+
+  copyBtn.addEventListener('click', async () => {
+    const text =
+`THE FRUSTRATION & THE INSTEAD
+The Incandescent Founder™ — Olivier Expressions
+
+THE FRUSTRATION
+${frustrationEl.value.trim()}
+
+THE INSTEAD
+${insteadEl.value.trim()}
+
+Build the woman first. The business follows.`;
+
+    try{
+      await navigator.clipboard.writeText(text);
+      showStatus('Copied to clipboard.');
+    }catch(e){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showStatus('Copied to clipboard.');
+    }
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    document.getElementById('pr-frustration').textContent = frustrationEl.value.trim();
+    document.getElementById('pr-instead').textContent = insteadEl.value.trim();
+
+    downloadBtn.disabled = true;
+    downloadBtn.textContent = 'Preparing...';
+
+    const renderEl = document.getElementById('pdf-render');
+    renderEl.style.left = '0px';
+    renderEl.style.top = '-99999px';
+
+    setTimeout(() => {
+      renderToPdf(renderEl);
+    }, 50);
+  });
+
+  async function renderToPdf(renderEl){
+    try{
+      const canvas = await window.html2canvas(renderEl, { backgroundColor: '#ffffff', scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth - 80;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 40, 40, imgWidth, imgHeight);
+      pdf.save('frustration-instead-prompt.pdf');
+
+      showStatus('PDF downloaded.');
+    }catch(err){
+      showStatus('Could not generate PDF — try again.');
+      console.error(err);
+    }finally{
+      renderEl.style.left = '-9999px';
+      renderEl.style.top = '0px';
+      downloadBtn.disabled = false;
+      downloadBtn.textContent = 'Download as PDF';
+      updateState();
+    }
+  }
+</script>
+
+</body>
+</html>
