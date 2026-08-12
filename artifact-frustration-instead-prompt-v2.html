@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700&family=Yellowtail&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
   :root{
     --white:#ffffff;
@@ -453,21 +452,6 @@
   <div class="footer-sub">The Incandescent Founder™</div>
 </div>
 
-<div id="pdf-render">
-  <div class="pr-mark">OLIVIER EXPRESSIONS</div>
-  <span class="pr-eyebrow">reflect</span>
-  <h1>The Frustration &amp; the Instead</h1>
-  <div class="pr-block">
-    <div class="pr-label">The Frustration</div>
-    <div class="pr-text" id="pr-frustration"></div>
-  </div>
-  <div class="pr-block">
-    <div class="pr-label">The Instead</div>
-    <div class="pr-text" id="pr-instead"></div>
-  </div>
-  <div class="pr-footer">Build the woman first. The business follows.</div>
-</div>
-
 <script>
   const frustrationEl = document.getElementById('frustration');
   const insteadEl = document.getElementById('instead');
@@ -527,46 +511,118 @@ Build the woman first. The business follows.`;
   });
 
   downloadBtn.addEventListener('click', () => {
-    document.getElementById('pr-frustration').textContent = frustrationEl.value.trim();
-    document.getElementById('pr-instead').textContent = insteadEl.value.trim();
-
     downloadBtn.disabled = true;
     downloadBtn.textContent = 'Preparing...';
 
-    const renderEl = document.getElementById('pdf-render');
-    renderEl.style.left = '0px';
-    renderEl.style.top = '-99999px';
-
-    setTimeout(() => {
-      renderToPdf(renderEl);
-    }, 50);
-  });
-
-  async function renderToPdf(renderEl){
     try{
-      const canvas = await window.html2canvas(renderEl, { backgroundColor: '#ffffff', scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
-
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'pt', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgWidth = pageWidth - 80;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 40, 40, imgWidth, imgHeight);
-      pdf.save('frustration-instead-prompt.pdf');
-
+      generatePdf(frustrationEl.value.trim(), insteadEl.value.trim());
       showStatus('PDF downloaded.');
     }catch(err){
       showStatus('Could not generate PDF — try again.');
       console.error(err);
     }finally{
-      renderEl.style.left = '-9999px';
-      renderEl.style.top = '0px';
       downloadBtn.disabled = false;
       downloadBtn.textContent = 'Download as PDF';
       updateState();
     }
+  });
+
+  function generatePdf(frustrationText, insteadText){
+    if(!window.jspdf){
+      throw new Error('jsPDF failed to load');
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'pt', 'a4');
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const marginX = 56;
+    const contentWidth = pageWidth - marginX * 2;
+    const bottomLimit = pageHeight - 64;
+    let y = 76;
+
+    const espresso = [44, 35, 22];
+    const antiqueGold = [156, 123, 52];
+    const metallicGold = [212, 175, 55];
+    const black = [0, 8, 0];
+    const milkChoc = [108, 77, 45];
+
+    function ensureSpace(neededHeight){
+      if(y + neededHeight > bottomLimit){
+        doc.addPage();
+        y = 76;
+      }
+    }
+
+    // Mark
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...espresso);
+    doc.text('OLIVIER EXPRESSIONS', marginX, y);
+    y += 30;
+
+    // Title
+    doc.setFont('times', 'italic');
+    doc.setFontSize(26);
+    doc.setTextColor(...espresso);
+    doc.text('The Frustration & the Instead', marginX, y);
+    y += 14;
+
+    // Gold rule under title
+    doc.setDrawColor(...metallicGold);
+    doc.setLineWidth(1.4);
+    doc.line(marginX, y, marginX + 90, y);
+    y += 38;
+
+    function renderSection(label, bodyText){
+      ensureSpace(60);
+
+      doc.setFont('times', 'bold');
+      doc.setFontSize(15);
+      doc.setTextColor(...espresso);
+      doc.text(label, marginX, y);
+      const labelWidth = doc.getTextWidth(label);
+      doc.setDrawColor(...metallicGold);
+      doc.setLineWidth(1.6);
+      doc.line(marginX, y + 4, marginX + labelWidth, y + 4);
+      y += 26;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.setTextColor(...black);
+
+      const text = bodyText && bodyText.length ? bodyText : '(no response entered)';
+      const lines = doc.splitTextToSize(text, contentWidth);
+      const lineHeight = 17;
+
+      lines.forEach((line) => {
+        ensureSpace(lineHeight);
+        doc.text(line, marginX, y);
+        y += lineHeight;
+      });
+
+      y += 26;
+    }
+
+    renderSection('The Frustration', frustrationText);
+    renderSection('The Instead', insteadText);
+
+    // Footer signature line
+    ensureSpace(40);
+    y += 6;
+    doc.setDrawColor(237, 227, 199);
+    doc.setLineWidth(0.75);
+    doc.line(marginX, y, pageWidth - marginX, y);
+    y += 24;
+
+    doc.setFont('times', 'italic');
+    doc.setFontSize(12.5);
+    doc.setTextColor(...antiqueGold);
+    const signature = 'Build the woman first. The business follows.';
+    const sigWidth = doc.getTextWidth(signature);
+    doc.text(signature, (pageWidth - sigWidth) / 2, y);
+
+    doc.save('frustration-instead-prompt.pdf');
   }
 </script>
 
