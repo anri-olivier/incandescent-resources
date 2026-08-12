@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Discover Your Values | Olivier Expressions</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Montserrat:wght@400;500;600;700&family=Dancing+Script:wght@600&display=swap');
+
+  :root{
+    --ivory:#F7F6F2;
+    --ivory-deep:#F0EEE7;
+    --espresso:#1D1311;
+    --gold:#B8A050;
+    --gold-soft:#D8C98A;
+    --forest:#203226;
+    --line:#E3DFD3;
+    --white:#FFFFFF;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--espresso);
+    font-family:'Montserrat',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:48px 24px 100px;
+  }
+
+  /* ---------- Header ---------- */
+  .crest{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .crest svg{width:26px;height:26px;}
+
+  .eyebrow{
+    text-align:center;
+    font-family:'Dancing Script',cursive;
+    color:var(--gold);
+    font-size:24px;
+    margin:0 0 2px;
+  }
+  h1{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-weight:400;
+    font-size:38px;
+    letter-spacing:0.5px;
+    margin:0 0 6px;
+    text-transform:capitalize;
+  }
+  .subhead{
+    text-align:center;
+    font-size:14px;
+    color:#5b5650;
+    max-width:480px;
+    margin:0 auto 36px;
+  }
+
+  .divider{
+    width:64px;
+    height:1.5px;
+    background:var(--gold);
+    margin:0 auto 36px;
+  }
+
+  /* ---------- Progress ---------- */
+  .progress-rail{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:40px;
+  }
+  .progress-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--line);
+    transition:background .3s, transform .3s;
+  }
+  .progress-dot.active{background:var(--gold); transform:scale(1.3);}
+  .progress-dot.done{background:var(--forest);}
+
+  /* ---------- Card / Step ---------- */
+  .step{display:none;}
+  .step.active{display:block; animation:fade .4s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:34px 30px;
+    margin-bottom:24px;
+  }
+
+  .step-label{
+    font-family:'Eyesome Script','Dancing Script',cursive;
+    color:#1D1311;
+    font-size:33px;
+    display:block;
+    margin-bottom:2px;
+  }
+  .step-title{
+    font-family:'Playfair Display',serif;
+    font-weight:400;
+    font-size:26px;
+    margin:0 0 10px;
+  }
+  .step-instructions{
+    font-size:14px;
+    color:#5b5650;
+    margin-bottom:24px;
+  }
+
+  /* ---------- Step 1: value picker ---------- */
+  .counter{
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.5px;
+    color:var(--forest);
+    background:var(--ivory-deep);
+    border-radius:30px;
+    padding:8px 14px;
+    margin-bottom:22px;
+    display:inline-block;
+  }
+  .counter-wrap{text-align:center;}
+
+  .value-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    justify-content:center;
+    margin-bottom:22px;
+  }
+  .value-chip{
+    border:1.5px solid var(--line);
+    background:var(--ivory);
+    color:var(--espresso);
+    border-radius:30px;
+    padding:8px 16px;
+    font-size:13px;
+    font-weight:500;
+    cursor:pointer;
+    transition:all .15s ease;
+    user-select:none;
+  }
+  .value-chip:hover{border-color:var(--gold-soft);}
+  .value-chip.selected{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--espresso);
+    font-weight:600;
+  }
+  .value-chip.disabled{
+    opacity:0.35;
+    cursor:not-allowed;
+  }
+
+  .custom-add{
+    display:flex;
+    gap:8px;
+    max-width:420px;
+    margin:0 auto 8px;
+  }
+  .custom-add input{
+    flex:1;
+    border:1.5px solid var(--line);
+    border-radius:30px;
+    padding:10px 16px;
+    font-family:'Montserrat',sans-serif;
+    font-size:13px;
+    background:var(--ivory);
+    color:var(--espresso);
+  }
+  .custom-add input:focus{outline:none; border-color:var(--gold);}
+  .custom-add button{
+    border-radius:30px;
+    border:1.5px solid var(--gold);
+    background:transparent;
+    color:var(--gold);
+    padding:10px 18px;
+    font-family:'Montserrat',sans-serif;
+    font-weight:600;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    cursor:pointer;
+  }
+  .custom-add button:hover{background:var(--gold); color:var(--espresso);}
+  .hint{font-size:12px; color:#8a8478; text-align:center; margin-top:4px;}
+
+  /* ---------- Step 2: narrow to top values ---------- */
+  .narrow-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .narrow-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:14px 18px;
+    background:var(--ivory);
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .narrow-item:hover{border-color:var(--gold-soft);}
+  .narrow-item.selected{
+    border-color:var(--gold);
+    background:#FBF8EE;
+  }
+  .narrow-item-name{font-weight:600; font-size:15px;}
+  .narrow-check{
+    width:20px;height:20px;border-radius:50%;
+    border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .narrow-item.selected .narrow-check{
+    background:var(--gold); border-color:var(--gold);
+  }
+  .narrow-check svg{width:11px;height:11px; display:none;}
+  .narrow-item.selected .narrow-check svg{display:block;}
+
+  /* ---------- Step 3: journal prompts ---------- */
+  .value-block{
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:26px 26px 14px;
+    margin-bottom:22px;
+    background:var(--white);
+  }
+  .value-block-title{
+    font-family:'Playfair Display',serif;
+    font-size:21px;
+    font-weight:400;
+    color:var(--forest);
+    margin:0 0 4px;
+    text-transform:capitalize;
+  }
+  .value-block-sub{
+    font-size:12px;
+    color:#B8A050;
+    font-weight:700;
+    margin-bottom:18px;
+  }
+  .prompt-q{
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+    color:var(--espresso);
+  }
+  .prompt-group{margin-bottom:18px;}
+  textarea{
+    width:100%;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    font-family:'Montserrat',sans-serif;
+    font-size:13px;
+    color:var(--espresso);
+    background:var(--ivory);
+    resize:vertical;
+    min-height:54px;
+  }
+  textarea:focus{outline:none; border-color:var(--gold);}
+
+  /* ---------- Step 4: confirm ---------- */
+  .confirm-pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-bottom:8px;
+  }
+  .confirm-pill{
+    background:var(--forest);
+    color:var(--ivory);
+    border-radius:30px;
+    padding:10px 20px;
+    font-size:14px;
+    font-weight:600;
+    text-transform:capitalize;
+  }
+
+  /* ---------- Step 5: sentence builder ---------- */
+  .formula-card{
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:24px 26px;
+    margin-bottom:20px;
+    background:var(--white);
+  }
+  .formula-eyebrow{
+    font-family:'Eyesome Script','Dancing Script',cursive;
+    color:var(--gold);
+    font-size:16px;
+    margin-bottom:2px;
+    display:block;
+  }
+  .formula-title{
+    font-family:'Playfair Display',serif;
+    font-weight:400;
+    font-size:20px;
+    margin:0 0 10px;
+  }
+  .formula-template{
+    font-size:13px;
+    font-style:italic;
+    color:#5b5650;
+    background:var(--ivory-deep);
+    border-radius:8px;
+    padding:12px 16px;
+    margin-bottom:16px;
+  }
+  .formula-fields{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-bottom:16px;
+  }
+  .formula-field label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--forest);
+    margin-bottom:5px;
+  }
+  .formula-field input{
+    width:100%;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:10px 14px;
+    font-family:'Montserrat',sans-serif;
+    font-size:13px;
+    background:var(--ivory);
+    color:var(--espresso);
+  }
+  .formula-field input:focus{outline:none; border-color:var(--gold);}
+  .formula-output{
+    background:#FBF8EE;
+    border-left:3px solid var(--gold);
+    padding:14px 18px;
+    font-family:'Playfair Display',serif;
+    font-size:16px;
+    color:var(--espresso);
+    border-radius:0 8px 8px 0;
+  }
+  .formula-output .placeholder{color:#b0aa9c; font-style:italic; font-family:'Montserrat',sans-serif; font-size:13px;}
+
+  /* ---------- Nav buttons ---------- */
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    margin-top:8px;
+  }
+  .btn{
+    border-radius:8px;
+    padding:13px 28px;
+    font-family:'Montserrat',sans-serif;
+    font-weight:600;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    cursor:pointer;
+    border:none;
+    transition:opacity .15s ease, transform .1s ease;
+  }
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:var(--gold); color:var(--espresso);}
+  .btn-primary:disabled{opacity:0.4; cursor:not-allowed;}
+  .btn-ghost{background:transparent; color:var(--gold); border:1.5px solid var(--gold);}
+  .btn-ghost:disabled{opacity:0.3; cursor:not-allowed;}
+  .btn-full{width:100%;}
+
+  /* ---------- Final / download ---------- */
+  .final-card{
+    text-align:center;
+    padding:46px 30px;
+  }
+  .final-icon{margin-bottom:14px;}
+  .final-via{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    margin:28px 0;
+    flex-wrap:wrap;
+  }
+  .final-via-item{
+    flex:1;
+    min-width:140px;
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    padding:18px 14px;
+  }
+  .final-via-item h4{
+    font-family:'Playfair Display',serif;
+    font-weight:400;
+    font-size:13px;
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin:0 0 10px;
+  }
+  .final-via-item p{font-size:22px; margin:0; color:var(--espresso); font-family:'Playfair Display',serif; font-weight:400; text-transform:capitalize;}
+
+  /* ---------- PDF document (hidden, rendered for export) ---------- */
+  #pdf-doc{position:absolute; left:-9999px; top:0; width:700px; background:var(--ivory);}
+  .pdf-page{padding:50px 50px 40px; background:var(--ivory); page-break-after:always;}
+  .pdf-header{text-align:center; margin-bottom:30px;}
+  .pdf-header .eyebrow{font-size:20px;}
+  .pdf-header h1{font-size:30px;}
+  .pdf-section-title{
+    font-family:'Playfair Display',serif;
+    font-size:20px;
+    color:var(--forest);
+    border-bottom:1.5px solid var(--gold);
+    padding-bottom:8px;
+    margin:30px 0 16px;
+    text-transform:capitalize;
+  }
+  .pdf-q{font-size:12px; font-weight:700; margin:14px 0 4px;}
+  .pdf-a{font-size:12px; color:#3a352f; margin:0 0 6px; padding-left:2px; border-left:2px solid var(--line); padding-left:10px; min-height:14px;}
+  .pdf-formula-title{font-family:'Playfair Display',serif; font-size:16px; color:var(--gold); margin:24px 0 6px;}
+  .pdf-formula-sentence{font-family:'Playfair Display',serif; font-size:18px; line-height:1.5; background:#FBF8EE; border-left:3px solid var(--gold); padding:16px 20px; border-radius:0 8px 8px 0;}
+  .pdf-footer{text-align:center; font-size:10px; color:#8a8478; margin-top:50px;}
+
+  @media(max-width:560px){
+    .wrap{padding:32px 16px 90px;}
+    h1{font-size:30px;}
+    .card{padding:26px 18px;}
+    .final-via{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="crest">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L13.8 9.2L21 11L13.8 12.8L12 20L10.2 12.8L3 11L10.2 9.2L12 2Z" fill="#B8A050"/>
+    </svg>
+  </div>
+  <p class="eyebrow">self discovery</p>
+  <h1>Find Your Core Values</h1>
+  <p class="subhead">A guided journey to name what matters most to you, and shape it into words you can live by.</p>
+  <div class="divider"></div>
+
+  <div class="progress-rail" id="progressRail"></div>
+
+  <!-- STEP 1: PICK 6 -->
+  <div class="step active" data-step="1">
+    <div class="card">
+      <span class="step-label">step one</span>
+      <h2 class="step-title">Choose Six Values</h2>
+      <p class="step-instructions">Scan the words below. Click any that pop out for you, the ones that feel true without overthinking. You can also add your own. Choose 5 to 10.</p>
+      <div class="counter-wrap"><span class="counter" id="pickCounter">0 of 10 selected</span></div>
+      <div class="custom-add">
+        <input type="text" id="customValueInput" placeholder="Add your own value..." maxlength="24">
+        <button id="addCustomBtn">Add</button>
+      </div>
+      <p class="hint" id="addHint" style="visibility:hidden;">Select 5 to 10 values, or type your own.</p>
+      <div class="value-grid" id="valueGrid"></div>
+      <div class="nav-row">
+        <span></span>
+        <button class="btn btn-primary" id="step1Next" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: NARROW TO TOP 2-4 -->
+  <div class="step" data-step="2">
+    <div class="card">
+      <span class="step-label">step two</span>
+      <h2 class="step-title">Narrow to Your Top Values</h2>
+      <p class="step-instructions">Look at the values you chose. Which ones are actually so alike and similar, which ones completely stand on their own? Compare them against each other until only your truest remain. Choose 3 to 5.</p>
+      <div class="counter-wrap"><span class="counter" id="narrowCounter">0 of 5 selected</span></div>
+      <div class="narrow-list" id="narrowList"></div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" data-back="1">Back</button>
+        <button class="btn btn-primary" id="step2Next" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: JOURNAL PROMPTS -->
+  <div class="step" data-step="3">
+    <span class="step-label" style="display:block;text-align:center;">step three</span>
+    <h2 class="step-title" style="text-align:center;">Get Clarity</h2>
+    <p class="step-instructions" style="text-align:center; max-width:520px; margin-left:auto; margin-right:auto;">This piece is optional, but it helps you remember why you chose it, when you use it, and why you stand by it.</p>
+    <div id="journalContainer"></div>
+    <div class="nav-row">
+      <button class="btn btn-ghost" data-back="2">Back</button>
+      <button class="btn btn-primary" id="step3Next">Continue</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: CONFIRM -->
+  <div class="step" data-step="4">
+    <div class="card" style="text-align:center;">
+      <span class="step-label">step four</span>
+      <h2 class="step-title">Confirm Your Values</h2>
+      <p class="step-instructions">After reflecting, these are the values most true to you right now. Ready to move forward with these?</p>
+      <div class="confirm-pills" id="confirmPills"></div>
+      <p class="hint" style="margin-top:18px;">If something shifted while journaling, go back and adjust.</p>
+      <div class="nav-row">
+        <button class="btn btn-ghost" data-back="3">Back</button>
+        <button class="btn btn-primary" id="step4Next">Yes, These Are Mine</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: SENTENCE BUILDER -->
+  <div class="step" data-step="5">
+    <span class="step-label" style="display:block;text-align:center;">step five</span>
+    <h2 class="step-title" style="text-align:center;">Put Your Values Into Words</h2>
+    <p class="step-instructions" style="text-align:center; max-width:520px; margin-left:auto; margin-right:auto;">A value only changes you when it is specific. Complete each formula below to turn your values into a statement you can return to.</p>
+
+    <div class="formula-card">
+      <span class="formula-eyebrow">the professional / career focus</span>
+      <h3 class="formula-title">Career &amp; Work</h3>
+      <p class="formula-template">I value [Quality] through [Specific Action] in order to [Impact].</p>
+      <div class="formula-fields">
+        <div class="formula-field"><label>Quality</label><input type="text" id="f1-quality" placeholder="e.g. Excellence"></div>
+        <div class="formula-field"><label>Specific Action</label><input type="text" id="f1-action" placeholder="e.g. delivering work I'm proud to put my name on"></div>
+        <div class="formula-field"><label>Impact</label><input type="text" id="f1-impact" placeholder="e.g. build a business that reflects who I am"></div>
+      </div>
+      <div class="formula-output" id="f1-output"><span class="placeholder">Your sentence will appear here as you type.</span></div>
+    </div>
+
+    <div class="formula-card">
+      <span class="formula-eyebrow">the personal growth focus</span>
+      <h3 class="formula-title">Personal Growth</h3>
+      <p class="formula-template">I value [Virtue] as embodied through my [Habit/Choice] because [Reason].</p>
+      <div class="formula-fields">
+        <div class="formula-field"><label>Virtue</label><input type="text" id="f2-virtue" placeholder="e.g. Discipline"></div>
+        <div class="formula-field"><label>Habit / Choice</label><input type="text" id="f2-habit" placeholder="e.g. showing up for myself before anyone else"></div>
+        <div class="formula-field"><label>Reason</label><input type="text" id="f2-reason" placeholder="e.g. I deserve the same devotion I give everyone else"></div>
+      </div>
+      <div class="formula-output" id="f2-output"><span class="placeholder">Your sentence will appear here as you type.</span></div>
+    </div>
+
+    <div class="formula-card">
+      <span class="formula-eyebrow">the relationship / community focus</span>
+      <h3 class="formula-title">Relationships &amp; Community</h3>
+      <p class="formula-template">I value [Core Belief] through [Daily/Weekly Behavior] so that [Group/Person] feels [Emotion/State].</p>
+      <div class="formula-fields">
+        <div class="formula-field"><label>Core Belief</label><input type="text" id="f3-belief" placeholder="e.g. Belonging"></div>
+        <div class="formula-field"><label>Daily / Weekly Behavior</label><input type="text" id="f3-behavior" placeholder="e.g. checking in with the women in my community"></div>
+        <div class="formula-field"><label>Group / Person</label><input type="text" id="f3-group" placeholder="e.g. my clients"></div>
+        <div class="formula-field"><label>Emotion / State</label><input type="text" id="f3-emotion" placeholder="e.g. seen and supported"></div>
+      </div>
+      <div class="formula-output" id="f3-output"><span class="placeholder">Your sentence will appear here as you type.</span></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" data-back="4">Back</button>
+      <button class="btn btn-primary" id="step5Next">Continue</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: FINAL / DOWNLOAD -->
+  <div class="step" data-step="6">
+    <div class="card final-card">
+      <div class="final-icon">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L13.8 9.2L21 11L13.8 12.8L12 20L10.2 12.8L3 11L10.2 9.2L12 2Z" fill="#B8A050"/>
+        </svg>
+      </div>
+      <span class="step-label">they've been chosen</span>
+      <h2 class="step-title">Your Values, Named</h2>
+      <p class="step-instructions">This is who you are when you are most yourself. Keep it close. Let it guide the next decision you make.</p>
+      <div class="final-via" id="finalSummary"></div>
+      <button class="btn btn-primary btn-full" id="downloadBtn">Download My Values (PDF)</button>
+      <p class="hint" id="downloadStatus" style="margin-top:12px;"></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Hidden PDF render target -->
+<div id="pdf-doc"></div>
+
+<script>
+/* ============ DATA ============ */
+const VALUES_LIST = [
+"Accountability","Adaptability","Altruism","Assertiveness","Awareness","Balance","Boldness","Calm",
+"Candor","Charity","Common Sense","Compassion","Confidence","Connection","Consistency","Conviction",
+"Cooperation","Courage","Courtesy","Craftsmanship","Creativity","Curiosity","Decisiveness","Dependability",
+"Discipline","Diversity","Drive","Efficiency","Empathy","Enthusiasm","Equality","Excellence","Fairness",
+"Fidelity","Freedom","Fun","Generosity","Gratitude","Happiness","Harmony","Health","Honesty","Honor",
+"Hope","Hospitality","Humility","Humor","Inclusion","Individuality","Innovation","Inspiring","Integrity",
+"Intelligence","Justice","Kindness","Leadership","Learning","Logic","Love","Loyalty","Openness","Optimism",
+"Passion","Patience","Persistence","Playfulness","Purpose","Realistic","Respect","Responsibility","Security",
+"Self-Reliance","Selfless","Service","Stewardship","Teamwork","Tolerance","Transparency","Trust",
+"Trustworthy","Understanding","Unity","Forgiveness","Self-Awareness","Authenticity","Ambition","Independence"
+];
+
+const JOURNAL_BANK = {
+"honesty":["What does honesty mean to you?","How important is being truthful in your daily life?","How does honesty affect your relationships?","Can honesty coexist with kindness?"],
+"trust":["What does trust mean to you in a relationship?","How do you build trust with others?","How do you know when to trust someone?","What actions demonstrate trust to you?"],
+"courage":["How do you define courage?","When was the last time you showed courage?","How does fear relate to courage?","What is the most courageous decision you've ever made?"],
+"gratitude":["What are you grateful for today?","How does practicing gratitude impact your mood?","How do you show gratitude for the small things?","How do you cultivate gratitude during difficult times?"],
+"respect":["What does respect mean to you?","How do you show respect to others?","How important is self-respect in your life?","Is respect earned or given freely?"],
+"responsibility":["What does it mean to be responsible?","How do you handle responsibility in your life?","How does responsibility affect your decision-making?","What role does responsibility play in achieving your goals?"],
+"empathy":["How do you define empathy?","How do you show empathy to others?","How does empathy influence your relationships?","What role does empathy play in conflict resolution?"],
+"kindness":["What does kindness mean to you?","How do you incorporate kindness into your daily life?","How does kindness affect your own sense of well-being?","How do you practice kindness toward yourself?"],
+"forgiveness":["How do you define forgiveness?","When was the last time you forgave someone?","How does forgiveness benefit the person forgiving?","Is forgiveness a sign of strength or weakness? Why?"],
+"patience":["How do you define patience?","How does patience affect your stress levels?","How does patience benefit your relationships?","How do you cultivate more patience in your life?"],
+"compassion":["How do you define compassion?","How do you show compassion to those in need?","Can you be compassionate toward yourself?","How do you balance compassion with boundaries?"],
+"open-mindedness":["What does being open-minded mean to you?","How does open-mindedness affect your relationships?","How do you stay open to new ideas?","How does being open-minded impact your growth?"],
+"openness":["What does being open-minded mean to you?","How does open-mindedness affect your relationships?","How do you stay open to new ideas?","How does being open-minded impact your growth?"],
+"persistence":["What does perseverance mean to you?","How do you stay motivated during tough times?","What role does failure play in perseverance?","How do you handle setbacks and keep going?"],
+"self-awareness":["What does it mean to be self-aware?","How do you increase your self-awareness?","How does self-awareness affect your decision-making?","What role does reflection play in self-awareness?"],
+"confidence":["What does confidence mean to you?","How do you build confidence in yourself?","Can you be confident in one area of life but not another? Why?","How do you maintain confidence in challenging situations?"],
+"hope":["What does hope mean to you?","How does hope help you get through difficult times?","How does hope influence the decisions you make?","Can hope ever be unrealistic? Why or why not?"],
+"integrity":["What does integrity mean to you?","How do you demonstrate integrity in your life?","How does integrity impact the way you make decisions?","What role does integrity play in leadership?"],
+"generosity":["What does generosity mean to you?","How do you show generosity in your daily life?","Can generosity be expressed in non-material ways?","How do you balance generosity with taking care of yourself?"],
+"discipline":["What does discipline mean to you?","How do you incorporate discipline into your life?","How does discipline help you achieve your goals?","Can you be too disciplined? Why or why not?"],
+"loyalty":["What does loyalty mean to you?","How do you show loyalty to others?","How does loyalty affect your relationships?","How do you decide who deserves your loyalty?"],
+"humility":["What does humility mean to you?","How do you stay humble in moments of success?","How do you balance humility with self-confidence?","How does humility impact your relationships?"],
+"authenticity":["What does it mean to be authentic?","How do you stay true to yourself in social situations?","How does authenticity affect your relationships?","How does being authentic make you feel?"],
+"adaptability":["What does adaptability mean to you?","How do you handle change in your life?","How does being adaptable benefit your relationships?","How do you balance adaptability with staying true to your values?"],
+"ambition":["What does ambition mean to you?","How does ambition influence your life goals?","How do you balance ambition with contentment?","How does ambition impact your sense of purpose?"],
+"optimism":["What does optimism mean to you?","How does optimism affect your outlook on life?","How do you stay optimistic in the face of challenges?","How do you balance optimism with realism?"],
+"independence":["What does independence mean to you?","How do you cultivate independence in your life?","How does independence impact your relationships?","Can you be too independent? Why or why not?"],
+"fairness":["What does fairness mean to you?","How do you demonstrate fairness in your daily life?","How does fairness affect your relationships?","How do you balance fairness with personal bias?"],
+"creativity":["What does creativity mean to you?","How do you express your creativity?","How do you stay creative when facing a challenge?","Can creativity be taught, or is it innate?"],
+"purpose":["What does purpose mean to you?","How do you find purpose in your daily life?","How does having a sense of purpose affect your motivation?","How does purpose impact your sense of fulfillment?"]
+};
+
+const GENERIC_PROMPTS = (val)=>[
+`What does ${val} mean to you, in your own words?`,
+`Describe a recent moment when you lived out ${val}. How did it feel?`,
+`Where in your life do you feel you are not yet honoring ${val}?`,
+`If ${val} guided every decision this month, what would change?`
+];
+
+function getPrompts(val){
+  const key = val.toLowerCase().trim();
+  return JOURNAL_BANK[key] || GENERIC_PROMPTS(val);
+}
+
+/* ============ STATE ============ */
+let state = {
+  picked: [],        // up to 6
+  customAdds: [],
+  narrowed: [],       // 2-4
+  journal: {},         // { value: [a1,a2,a3,a4] }
+  currentStep: 1
+};
+
+/* ============ RENDER: STEP 1 ============ */
+const valueGrid = document.getElementById('valueGrid');
+function renderValueGrid(){
+  valueGrid.innerHTML = '';
+  const allValues = [...VALUES_LIST, ...state.customAdds];
+  allValues.forEach(v=>{
+    const chip = document.createElement('div');
+    chip.className = 'value-chip';
+    chip.textContent = v;
+    if(state.picked.includes(v)) chip.classList.add('selected');
+    if(!state.picked.includes(v) && state.picked.length>=10) chip.classList.add('disabled');
+    chip.addEventListener('click', ()=>toggleValue(v));
+    valueGrid.appendChild(chip);
+  });
+  updatePickCounter();
+}
+
+function toggleValue(v){
+  const idx = state.picked.indexOf(v);
+  if(idx>-1){
+    state.picked.splice(idx,1);
+  } else if(state.picked.length<10){
+    state.picked.push(v);
+  }
+  renderValueGrid();
+}
+
+function updatePickCounter(){
+  document.getElementById('pickCounter').textContent = `${state.picked.length} of 10 selected`;
+  document.getElementById('step1Next').disabled = state.picked.length < 5;
+}
+
+document.getElementById('addCustomBtn').addEventListener('click', addCustomValue);
+document.getElementById('customValueInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){ e.preventDefault(); addCustomValue(); }
+});
+function addCustomValue(){
+  const input = document.getElementById('customValueInput');
+  let val = input.value.trim();
+  if(!val) return;
+  val = val.charAt(0).toUpperCase()+val.slice(1);
+  if(![...VALUES_LIST, ...state.customAdds].includes(val)){
+    state.customAdds.push(val);
+  }
+  if(state.picked.length<10 && !state.picked.includes(val)){
+    state.picked.push(val);
+  }
+  input.value='';
+  renderValueGrid();
+}
+
+document.getElementById('step1Next').addEventListener('click', ()=>{
+  state.narrowed = [];
+  goToStep(2);
+  renderNarrowList();
+});
+
+/* ============ RENDER: STEP 2 ============ */
+function renderNarrowList(){
+  const list = document.getElementById('narrowList');
+  list.innerHTML = '';
+  state.picked.forEach(v=>{
+    const item = document.createElement('div');
+    item.className = 'narrow-item';
+    if(state.narrowed.includes(v)) item.classList.add('selected');
+    item.innerHTML = `<span class="narrow-item-name">${v}</span>
+      <span class="narrow-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#1D1311" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    item.addEventListener('click', ()=>toggleNarrow(v));
+    list.appendChild(item);
+  });
+  updateNarrowCounter();
+}
+function toggleNarrow(v){
+  const idx = state.narrowed.indexOf(v);
+  if(idx>-1){
+    state.narrowed.splice(idx,1);
+  } else if(state.narrowed.length<5){
+    state.narrowed.push(v);
+  }
+  renderNarrowList();
+}
+function updateNarrowCounter(){
+  document.getElementById('narrowCounter').textContent = `${state.narrowed.length} of 5 selected`;
+  document.getElementById('step2Next').disabled = state.narrowed.length < 3;
+}
+
+document.getElementById('step2Next').addEventListener('click', ()=>{
+  renderJournal();
+  goToStep(3);
+});
+
+/* ============ RENDER: STEP 3 ============ */
+function renderJournal(){
+  const container = document.getElementById('journalContainer');
+  container.innerHTML = '';
+  state.narrowed.forEach(v=>{
+    if(!state.journal[v]) state.journal[v] = ['','','',''];
+    const prompts = getPrompts(v);
+    const block = document.createElement('div');
+    block.className = 'value-block';
+    let html = `<h3 class="value-block-title">${v}</h3><p class="value-block-sub">Take your time with each one.</p>`;
+    prompts.forEach((q,i)=>{
+      html += `<div class="prompt-group">
+        <p class="prompt-q">${i+1}. ${q}</p>
+        <textarea data-value="${v}" data-idx="${i}" placeholder="Your answer...">${state.journal[v][i]||''}</textarea>
+      </div>`;
+    });
+    block.innerHTML = html;
+    container.appendChild(block);
+  });
+  container.querySelectorAll('textarea').forEach(t=>{
+    t.addEventListener('input', e=>{
+      const v = e.target.dataset.value;
+      const i = parseInt(e.target.dataset.idx);
+      state.journal[v][i] = e.target.value;
+    });
+  });
+}
+
+document.getElementById('step3Next').addEventListener('click', ()=>{
+  renderConfirm();
+  goToStep(4);
+});
+
+/* ============ RENDER: STEP 4 ============ */
+function renderConfirm(){
+  const pills = document.getElementById('confirmPills');
+  pills.innerHTML = '';
+  state.narrowed.forEach(v=>{
+    const p = document.createElement('span');
+    p.className = 'confirm-pill';
+    p.textContent = v;
+    pills.appendChild(p);
+  });
+}
+
+document.getElementById('step4Next').addEventListener('click', ()=>{
+  goToStep(5);
+});
+
+/* ============ STEP 5: SENTENCE BUILDER LIVE PREVIEW ============ */
+function wireFormula(prefix, fields, template, outputId){
+  const inputs = fields.map(f=>document.getElementById(prefix+'-'+f));
+  function update(){
+    const vals = inputs.map(i=>i.value.trim());
+    if(vals.every(v=>v==='')){
+      document.getElementById(outputId).innerHTML = `<span class="placeholder">Your sentence will appear here as you type.</span>`;
+      return;
+    }
+    let sentence = template;
+    fields.forEach((f,i)=>{
+      const ph = '['+ (vals[i] || ('___')) +']';
+      sentence = sentence.replace('{'+f+'}', vals[i] ? `<strong>${escapeHtml(vals[i])}</strong>` : `<span class="placeholder">[${f}]</span>`);
+    });
+    document.getElementById(outputId).innerHTML = sentence;
+  }
+  inputs.forEach(i=>i.addEventListener('input', update));
+}
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+wireFormula('f1', ['quality','action','impact'],
+  'I value {quality} through {action} in order to {impact}.', 'f1-output');
+wireFormula('f2', ['virtue','habit','reason'],
+  'I value {virtue} as embodied through my {habit} because {reason}.', 'f2-output');
+wireFormula('f3', ['belief','behavior','group','emotion'],
+  'I value {belief} through {behavior} so that {group} feels {emotion}.', 'f3-output');
+
+document.getElementById('step5Next').addEventListener('click', ()=>{
+  renderFinal();
+  goToStep(6);
+});
+
+/* ============ STEP 6: FINAL SUMMARY ============ */
+function renderFinal(){
+  const wrap = document.getElementById('finalSummary');
+  wrap.innerHTML = '';
+  state.narrowed.forEach((v,i)=>{
+    const div = document.createElement('div');
+    div.className = 'final-via-item';
+    div.innerHTML = `<h4>Value ${i+1}</h4><p>${v}</p>`;
+    wrap.appendChild(div);
+  });
+}
+
+/* ============ NAV ============ */
+const totalSteps = 6;
+function renderProgress(){
+  const rail = document.getElementById('progressRail');
+  rail.innerHTML = '';
+  for(let i=1;i<=totalSteps;i++){
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if(i < state.currentStep) dot.classList.add('done');
+    if(i === state.currentStep) dot.classList.add('active');
+    rail.appendChild(dot);
+  }
+}
+function goToStep(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.querySelector(`.step[data-step="${n}"]`).classList.add('active');
+  state.currentStep = n;
+  renderProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('[data-back]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const target = parseInt(btn.dataset.back);
+    if(target===2) renderNarrowList();
+    if(target===3) renderJournal();
+    if(target===4) renderConfirm();
+    goToStep(target);
+  });
+});
+
+/* ============ INIT ============ */
+renderValueGrid();
+renderProgress();
+
+/* ============ PDF DOWNLOAD ============ */
+document.getElementById('downloadBtn').addEventListener('click', generatePDF);
+
+function buildPdfDoc(){
+  const doc = document.getElementById('pdf-doc');
+  let html = `<div class="pdf-page">
+    <div class="pdf-header">
+      <p class="eyebrow" style="font-family:'Dancing Script',cursive; color:#B8A050; margin:0;">self discovery</p>
+      <h1 style="font-family:'Playfair Display',serif; font-weight:400; margin:4px 0 0;">My Core Values</h1>
+      <div style="width:64px;height:1.5px;background:#B8A050;margin:14px auto 0;"></div>
+    </div>
+    <p style="text-align:center; font-size:13px; color:#5b5650; max-width:480px; margin:18px auto 0;">A record of what matters most, in my own words.</p>
+    <div class="pdf-section-title" style="margin-top:34px;">My Top Values</div>
+    <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:10px;">`;
+  state.narrowed.forEach(v=>{
+    html += `<span style="background:#203226;color:#F7F6F2;border-radius:30px;padding:9px 18px;font-size:13px;font-weight:600;text-transform:capitalize;">${v}</span>`;
+  });
+  html += `</div></div>`;
+
+  // journal pages
+  state.narrowed.forEach(v=>{
+    const prompts = getPrompts(v);
+    html += `<div class="pdf-page"><div class="pdf-section-title">${v} — Reflections</div>`;
+    prompts.forEach((q,i)=>{
+      const ans = (state.journal[v] && state.journal[v][i]) ? state.journal[v][i] : '';
+      html += `<p class="pdf-q">${i+1}. ${q}</p><p class="pdf-a">${ans ? escapeHtml(ans) : '<span style="color:#b0aa9c;font-style:italic;">No answer recorded</span>'}</p>`;
+    });
+    html += `</div>`;
+  });
+
+  // formula page
+  const f1 = buildPlainSentence(['f1-quality','f1-action','f1-impact'], ['I value ','{0}',' through ','{1}',' in order to ','{2}','.']);
+  const f2 = buildPlainSentence(['f2-virtue','f2-habit','f2-reason'], ['I value ','{0}',' as embodied through my ','{1}',' because ','{2}','.']);
+  const f3 = buildPlainSentence(['f3-belief','f3-behavior','f3-group','f3-emotion'], ['I value ','{0}',' through ','{1}',' so that ','{2}',' feels ','{3}','.']);
+
+  html += `<div class="pdf-page">
+    <div class="pdf-section-title">My Values, In Words</div>
+    <p class="pdf-formula-title">Career &amp; Work</p>
+    <div class="pdf-formula-sentence">${f1}</div>
+    <p class="pdf-formula-title">Personal Growth</p>
+    <div class="pdf-formula-sentence">${f2}</div>
+    <p class="pdf-formula-title">Relationships &amp; Community</p>
+    <div class="pdf-formula-sentence">${f3}</div>
+    <p class="pdf-footer">Olivier Expressions &middot; Master Key&trade; Method &middot; olivierexpressions.com</p>
+  </div>`;
+
+  doc.innerHTML = html;
+}
+
+function buildPlainSentence(ids, parts){
+  const vals = ids.map(id => {
+    const el = document.getElementById(id);
+    const v = el ? el.value.trim() : '';
+    return v || `[${id.split('-')[1]}]`;
+  });
+  let out = '';
+  let valIdx = 0;
+  parts.forEach(p=>{
+    if(p.startsWith('{') && p.endsWith('}')){
+      out += vals[parseInt(p.replace('{','').replace('}',''))];
+    } else {
+      out += p;
+    }
+  });
+  return escapeHtml(out).replace(/\[([a-z]+)\]/gi, '<span style="color:#b0aa9c;">[$1]</span>');
+}
+
+async function generatePDF(){
+  const statusEl = document.getElementById('downloadStatus');
+  statusEl.textContent = 'Preparing your PDF...';
+  buildPdfDoc();
+
+  const pdfDoc = document.getElementById('pdf-doc');
+  pdfDoc.style.left = '0';
+  pdfDoc.style.position = 'fixed';
+  pdfDoc.style.top = '-99999px';
+  pdfDoc.style.zIndex = '-1';
+
+  const pages = pdfDoc.querySelectorAll('.pdf-page');
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p','pt','a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  for(let i=0;i<pages.length;i++){
+    const canvas = await html2canvas(pages[i], {scale:2, backgroundColor:'#F7F6F2'});
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    const imgWidth = pageWidth;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    if(i>0) pdf.addPage();
+    if(imgHeight <= pageHeight){
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+    } else {
+      // scale to fit page height
+      const scaledHeight = pageHeight;
+      const scaledWidth = canvas.width * scaledHeight / canvas.height;
+      pdf.addImage(imgData, 'JPEG', (pageWidth-scaledWidth)/2, 0, scaledWidth, scaledHeight);
+    }
+  }
+
+  pdfDoc.style.position = 'absolute';
+  pdfDoc.style.left = '-9999px';
+
+  pdf.save('My-Core-Values-Olivier-Expressions.pdf');
+  statusEl.textContent = 'Downloaded. Welcome to clarity.';
+}
+</script>
+</body>
+</html>
