@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Frustration → Instead Prompt | The Incandescent Founder</title>
+<title>The Frustration &amp; the Instead | The Incandescent Founder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700&family=Yellowtail&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700&family=Yellowtail&display=swap" rel="stylesheet">
 <style>
   :root{
     --white:#ffffff;
@@ -36,41 +35,10 @@
     -webkit-font-smoothing:antialiased;
   }
 
-  .hero{
-    background:var(--ivory);
-    padding:72px 40px 56px;
-    text-align:center;
-  }
-
-  .hero-mark{
-    font-family:'Cinzel Decorative', serif;
-    font-weight:700;
-    font-size:clamp(26px, 4vw, 34px);
-    color:var(--espresso);
-    letter-spacing:0.02em;
-  }
-
-  .hero-script{
-    font-family:'Yellowtail', cursive;
-    font-size:30px;
-    color:var(--antique-gold);
-    margin-top:10px;
-    display:block;
-  }
-
   .page{
     max-width:720px;
     margin:0 auto;
-    padding:56px 28px 96px;
-  }
-
-  .eyebrow{
-    font-family:'Playfair Display', serif;
-    font-size:13px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--gold);
-    margin-bottom:12px;
+    padding:40px 28px 48px;
   }
 
   h1{
@@ -155,10 +123,14 @@
   }
 
   .prompts-list li::before{
-    content:"—";
+    content:"";
     position:absolute;
-    left:0;
-    color:var(--gold);
+    left:2px;
+    top:0.7em;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:var(--gold);
   }
 
   .card{
@@ -272,21 +244,6 @@
     cursor:not-allowed;
   }
 
-  .btn-secondary{
-    background:var(--linen);
-    color:var(--antique-gold);
-    border:1px solid var(--bronze-gold);
-  }
-  .btn-secondary:hover{
-    background:var(--vanilla);
-  }
-  .btn-secondary:disabled{
-    color:#a89a82;
-    border-color:var(--vanilla);
-    background:var(--ivory);
-    cursor:not-allowed;
-  }
-
   .status-msg{
     font-size:12px;
     color:var(--antique-gold);
@@ -297,107 +254,19 @@
   }
   .status-msg.show{ opacity:1; }
 
-  .footer{
-    background:var(--espresso);
-    padding:40px 28px;
-    text-align:center;
-    margin-top:16px;
-  }
-
-  .footer-mark{
-    font-family:'Cinzel Decorative', serif;
-    font-weight:700;
-    font-size:16px;
-    color:var(--metallic-gold);
-  }
-
-  .footer-sub{
-    font-family:'Montserrat', sans-serif;
-    font-size:12px;
-    color:var(--linen);
-    margin-top:8px;
-  }
-
   @media (max-width:600px){
-    .page{ padding:44px 20px 72px; }
-    .hero{ padding:56px 24px 44px; }
+    .page{ padding:32px 20px 40px; }
     .actions{ flex-direction:column; }
     button{ width:100%; }
-  }
-
-  #pdf-render{
-    position:fixed;
-    left:-9999px;
-    top:0;
-    width:680px;
-    background:#ffffff;
-    color:#000800;
-    font-family:'Montserrat', sans-serif;
-    padding:56px 52px;
-  }
-  #pdf-render .pr-mark{
-    font-family:'Cinzel Decorative', serif;
-    font-weight:700;
-    font-size:20px;
-    color:#2c2316;
-    margin-bottom:6px;
-  }
-  #pdf-render .pr-eyebrow{
-    font-family:'Yellowtail', cursive;
-    font-size:30px;
-    color:#9c7b34;
-    display:block;
-  }
-  #pdf-render h1{
-    font-family:'Playfair Display', serif;
-    font-weight:600;
-    font-size:28px;
-    color:#2c2316;
-    margin:6px 0 24px;
-  }
-  #pdf-render .pr-block{
-    margin-bottom:26px;
-  }
-  #pdf-render .pr-label{
-    font-family:'Playfair Display', serif;
-    font-weight:600;
-    font-size:16px;
-    color:#2c2316;
-    margin-bottom:8px;
-    border-bottom:2px solid #d4af37;
-    display:inline-block;
-    padding-bottom:3px;
-  }
-  #pdf-render .pr-text{
-    font-size:14px;
-    line-height:1.7;
-    color:#000800;
-    white-space:pre-wrap;
-  }
-  #pdf-render .pr-footer{
-    margin-top:36px;
-    padding-top:16px;
-    border-top:1px solid #ede3c7;
-    font-family:'Playfair Display', serif;
-    font-style:italic;
-    font-size:13px;
-    color:#9c7b34;
-    text-align:center;
   }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-mark">THE INCANDESCENT FOUNDER</div>
-  <span class="hero-script">reflect</span>
-</div>
-
 <div class="page">
 
-  <div class="eyebrow">This Week's Prompt</div>
   <h1>The Frustration <em>&amp; the</em> Instead</h1>
-  <p class="intro">Straight from this week's session — five minutes, two questions. Don't worry about the bridge yet. Just get honest about what's true right now, and what you wish were true instead.</p>
+  <p class="intro">Straight from this week's session: five minutes, two questions. Don't worry about the bridge yet. Just get honest about what's true right now, and what you wish were true instead.</p>
   <p class="signature-line">Build the woman first. The business follows.</p>
 
   <div class="step">
@@ -405,7 +274,7 @@
       <span class="step-number">One</span>
       <span class="step-title">The Frustration</span>
     </div>
-    <p class="step-sub">Think about your day to day. What are you doing every single day? What are you repeating — tasks, automations, questions?</p>
+    <p class="step-sub">Think about your day to day. What are you doing every single day? What are you repeating: tasks, automations, questions?</p>
     <ul class="prompts-list">
       <li>What's frustrating you, holding you back?</li>
       <li>What do you keep saying you'll fix, and never do?</li>
@@ -421,10 +290,10 @@
       <span class="step-number">Two</span>
       <span class="step-title">The Instead</span>
     </div>
-    <p class="step-sub">Don't worry about the bridge — just think about where you want to spend your time instead.</p>
+    <p class="step-sub">Don't worry about the bridge. Just think about where you want to spend your time instead.</p>
     <ul class="prompts-list">
       <li>What do you wish you did less of?</li>
-      <li>What do you wish you could delegate — to AI, an employee, or a VA?</li>
+      <li>What do you wish you could delegate to AI, an employee, or a VA?</li>
       <li>What would let you focus on your business, instead of being stuck in it?</li>
     </ul>
     <div class="card">
@@ -436,20 +305,14 @@
   <div class="bridge" id="bridge">
     <span class="bridge-label">the bridge comes next</span>
     <div class="bridge-line"></div>
-    <p class="bridge-copy">You've named both sides. Bring this Thursday — we build the bridge together.</p>
+    <p class="bridge-copy">You've named both sides. Bring this Thursday and we build the bridge together.</p>
   </div>
 
   <div class="actions">
-    <button class="btn-primary" id="download-btn" disabled>Download as PDF</button>
-    <button class="btn-secondary" id="copy-btn" disabled>Copy to Clipboard</button>
+    <button class="btn-primary" id="copy-btn" disabled>Copy to Clipboard</button>
   </div>
   <div class="status-msg" id="status-msg"></div>
 
-</div>
-
-<div class="footer">
-  <div class="footer-mark">OLIVIER EXPRESSIONS</div>
-  <div class="footer-sub">The Incandescent Founder™</div>
 </div>
 
 <script>
@@ -458,7 +321,6 @@
   const countF = document.getElementById('count-frustration');
   const countI = document.getElementById('count-instead');
   const bridge = document.getElementById('bridge');
-  const downloadBtn = document.getElementById('download-btn');
   const copyBtn = document.getElementById('copy-btn');
   const statusMsg = document.getElementById('status-msg');
 
@@ -469,7 +331,6 @@
     countI.textContent = insteadEl.value.length;
 
     const bothFilled = f.length > 0 && i.length > 0;
-    downloadBtn.disabled = !bothFilled;
     copyBtn.disabled = !bothFilled;
     bridge.classList.toggle('visible', bothFilled);
   }
@@ -486,7 +347,7 @@
   copyBtn.addEventListener('click', async () => {
     const text =
 `THE FRUSTRATION & THE INSTEAD
-The Incandescent Founder™ — Olivier Expressions
+The Incandescent Founder™ | Olivier Expressions
 
 THE FRUSTRATION
 ${frustrationEl.value.trim()}
@@ -509,121 +370,6 @@ Build the woman first. The business follows.`;
       showStatus('Copied to clipboard.');
     }
   });
-
-  downloadBtn.addEventListener('click', () => {
-    downloadBtn.disabled = true;
-    downloadBtn.textContent = 'Preparing...';
-
-    try{
-      generatePdf(frustrationEl.value.trim(), insteadEl.value.trim());
-      showStatus('PDF downloaded.');
-    }catch(err){
-      showStatus('Could not generate PDF — try again.');
-      console.error(err);
-    }finally{
-      downloadBtn.disabled = false;
-      downloadBtn.textContent = 'Download as PDF';
-      updateState();
-    }
-  });
-
-  function generatePdf(frustrationText, insteadText){
-    if(!window.jspdf){
-      throw new Error('jsPDF failed to load');
-    }
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'pt', 'a4');
-
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const marginX = 56;
-    const contentWidth = pageWidth - marginX * 2;
-    const bottomLimit = pageHeight - 64;
-    let y = 76;
-
-    const espresso = [44, 35, 22];
-    const antiqueGold = [156, 123, 52];
-    const metallicGold = [212, 175, 55];
-    const black = [0, 8, 0];
-    const milkChoc = [108, 77, 45];
-
-    function ensureSpace(neededHeight){
-      if(y + neededHeight > bottomLimit){
-        doc.addPage();
-        y = 76;
-      }
-    }
-
-    // Mark
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(...espresso);
-    doc.text('OLIVIER EXPRESSIONS', marginX, y);
-    y += 30;
-
-    // Title
-    doc.setFont('times', 'italic');
-    doc.setFontSize(26);
-    doc.setTextColor(...espresso);
-    doc.text('The Frustration & the Instead', marginX, y);
-    y += 14;
-
-    // Gold rule under title
-    doc.setDrawColor(...metallicGold);
-    doc.setLineWidth(1.4);
-    doc.line(marginX, y, marginX + 90, y);
-    y += 38;
-
-    function renderSection(label, bodyText){
-      ensureSpace(60);
-
-      doc.setFont('times', 'bold');
-      doc.setFontSize(15);
-      doc.setTextColor(...espresso);
-      doc.text(label, marginX, y);
-      const labelWidth = doc.getTextWidth(label);
-      doc.setDrawColor(...metallicGold);
-      doc.setLineWidth(1.6);
-      doc.line(marginX, y + 4, marginX + labelWidth, y + 4);
-      y += 26;
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(12);
-      doc.setTextColor(...black);
-
-      const text = bodyText && bodyText.length ? bodyText : '(no response entered)';
-      const lines = doc.splitTextToSize(text, contentWidth);
-      const lineHeight = 17;
-
-      lines.forEach((line) => {
-        ensureSpace(lineHeight);
-        doc.text(line, marginX, y);
-        y += lineHeight;
-      });
-
-      y += 26;
-    }
-
-    renderSection('The Frustration', frustrationText);
-    renderSection('The Instead', insteadText);
-
-    // Footer signature line
-    ensureSpace(40);
-    y += 6;
-    doc.setDrawColor(237, 227, 199);
-    doc.setLineWidth(0.75);
-    doc.line(marginX, y, pageWidth - marginX, y);
-    y += 24;
-
-    doc.setFont('times', 'italic');
-    doc.setFontSize(12.5);
-    doc.setTextColor(...antiqueGold);
-    const signature = 'Build the woman first. The business follows.';
-    const sigWidth = doc.getTextWidth(signature);
-    doc.text(signature, (pageWidth - sigWidth) / 2, y);
-
-    doc.save('frustration-instead-prompt.pdf');
-  }
 </script>
 
 </body>
