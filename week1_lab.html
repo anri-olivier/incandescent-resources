@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 1 Lab — My To-Be System + First Instead Bridge</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8D49A;
+    --gold-pale: #FAF6EC;
+    --charcoal: #1C1C1A;
+    --mid: #5A5750;
+    --light-mid: #9A9690;
+    --border: #DDD9CE;
+    --bg: #FDFCF9;
+    --white: #FFFFFF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--charcoal);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  .topband {
+    background: var(--charcoal);
+    padding: 10px 24px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+  }
+
+  .hero {
+    background: var(--charcoal);
+    padding: 36px 28px 32px;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .hero-title em { color: var(--gold); font-style: italic; }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--light-mid);
+  }
+
+  .body {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .section { margin-top: 32px; }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .section-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--gold-pale);
+    border: 1px solid var(--gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-weight: 400;
+    color: var(--charcoal);
+    line-height: 1.2;
+  }
+
+  .card {
+    background: var(--white);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--light-mid);
+    font-style: italic;
+    font-weight: 300;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--gold-pale);
+    border: 0.5px solid var(--gold-light);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    font-weight: 300;
+    line-height: 1.65;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { border-color: var(--gold); }
+  textarea::placeholder { color: var(--light-mid); font-style: italic; }
+
+  input[type="text"] {
+    width: 100%;
+    background: var(--gold-pale);
+    border: 0.5px solid var(--gold-light);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus { border-color: var(--gold); }
+  input[type="text"]::placeholder { color: var(--light-mid); font-style: italic; }
+
+  .tobe-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
+  }
+  .tobe-row:last-child { margin-bottom: 0; }
+  .tobe-prefix {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: 38px;
+  }
+  .tobe-row input[type="text"] { flex: 1; width: auto; }
+
+  .grid2 {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    gap: 12px;
+  }
+  .fullrow { grid-column: 1 / -1; }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--light-mid);
+    font-weight: 500;
+  }
+
+  .gap-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 0;
+    border-bottom: 0.5px solid #F0EDE6;
+  }
+  .gap-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+  .gap-area {
+    font-size: 13px;
+    color: var(--charcoal);
+    font-weight: 400;
+    width: 110px;
+    flex-shrink: 0;
+  }
+  .stars { display: flex; gap: 5px; flex-shrink: 0; }
+  .star {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--gold-pale);
+    border: 0.5px solid var(--gold-light);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--light-mid);
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .star.on { background: var(--gold); border-color: var(--gold); color: var(--white); }
+  .score-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .bridge-item { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .bridge-item:last-child { margin-bottom: 0; }
+  .bridge-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--light-mid);
+    font-weight: 500;
+  }
+
+  .divider {
+    height: 0.5px;
+    background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+    margin: 28px 0 0;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .btn-dl {
+    background: var(--gold);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: 13px 26px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-dl:hover { opacity: 0.85; }
+  .btn-reset {
+    background: transparent;
+    color: var(--light-mid);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-reset:hover { border-color: var(--charcoal); color: var(--charcoal); }
+
+  .footer {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 0.5px solid var(--border);
+    margin-top: 36px;
+    font-size: 11px;
+    color: var(--light-mid);
+    letter-spacing: 0.5px;
+  }
+  .footer em {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  @media (max-width: 500px) {
+    .hero-title { font-size: 28px; }
+    .grid2 { grid-template-columns: 1fr; }
+    .stars .star { width: 26px; height: 26px; font-size: 11px; }
+    .gap-area { width: 90px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topband">Incandescent Founders™ — Week 1 Lab</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Week 1 — Identity Lab</div>
+  <div class="hero-title">My To-Be System +<br><em>First Instead Bridge</em></div>
+  <div class="hero-sub">Who I am choosing to be — and how I begin to live from it.</div>
+</div>
+
+<div class="body">
+
+  <!-- SECTION 1 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-label">Section One</div>
+        <div class="section-title">My Tuesday Revelation</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="hint">What did I realize, see, feel, or no longer want to ignore?</div>
+      <textarea id="s1" placeholder="Write freely. This is your starting place..." style="min-height:110px;"></textarea>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-label">Section Two</div>
+        <div class="section-title">My To-Be List</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="hint">This week, I am choosing to be…</div>
+      <div class="tobe-row"><span class="tobe-prefix">I am</span><input type="text" class="tobe" placeholder="e.g. visible, clear, and willing to be seen" /></div>
+      <div class="tobe-row"><span class="tobe-prefix">I am</span><input type="text" class="tobe" placeholder="" /></div>
+      <div class="tobe-row"><span class="tobe-prefix">I am</span><input type="text" class="tobe" placeholder="" /></div>
+      <div class="tobe-row"><span class="tobe-prefix">I am</span><input type="text" class="tobe" placeholder="" /></div>
+      <div class="tobe-row"><span class="tobe-prefix">I am</span><input type="text" class="tobe" placeholder="" /></div>
+      <div class="tobe-row"><span class="tobe-prefix">I am</span><input type="text" class="tobe" placeholder="" /></div>
+      <div class="tobe-row"><span class="tobe-prefix">I am</span><input type="text" class="tobe" placeholder="" /></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-label">Section Three</div>
+        <div class="section-title">My Daily To-Be System</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="grid2">
+        <div class="field">
+          <div class="field-label">Where my list will live</div>
+          <input type="text" id="s3a" placeholder="e.g. Notion, journal, mirror..." />
+        </div>
+        <div class="field">
+          <div class="field-label">When I will check it</div>
+          <input type="text" id="s3b" placeholder="e.g. every morning at 7am..." />
+        </div>
+        <div class="field fullrow">
+          <div class="field-label">My morning prompt</div>
+          <input type="text" id="s3c" placeholder="The question I'll ask myself each morning..." />
+        </div>
+        <div class="field fullrow">
+          <div class="field-label">My evening evidence prompt</div>
+          <input type="text" id="s3d" placeholder="The question I'll ask myself each evening..." />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-label">Section Four</div>
+        <div class="section-title">My Next Instead</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="grid2">
+        <div class="field">
+          <div class="field-label" style="color: var(--light-mid);">Instead of</div>
+          <textarea id="s4a" placeholder="The old way, task, or belief..." style="min-height:80px;"></textarea>
+        </div>
+        <div class="field">
+          <div class="field-label" style="color: var(--gold);">I want</div>
+          <textarea id="s4b" placeholder="The identity, feeling, or new way of being..." style="min-height:80px;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">5</div>
+      <div>
+        <div class="section-label">Section Five</div>
+        <div class="section-title">My Gentle Gap Scan</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="gap-row">
+        <div class="gap-area">Self</div>
+        <div class="stars" data-key="self"></div>
+        <div class="score-val" id="val-self">— / 5</div>
+      </div>
+      <div class="gap-row">
+        <div class="gap-area">Business</div>
+        <div class="stars" data-key="business"></div>
+        <div class="score-val" id="val-business">— / 5</div>
+      </div>
+      <div class="gap-row">
+        <div class="gap-area">Environment</div>
+        <div class="stars" data-key="environment"></div>
+        <div class="score-val" id="val-environment">— / 5</div>
+      </div>
+      <div class="gap-row">
+        <div class="gap-area">Relationships</div>
+        <div class="stars" data-key="relationships"></div>
+        <div class="score-val" id="val-relationships">— / 5</div>
+      </div>
+      <div class="gap-row" style="border-bottom:none;">
+        <div class="gap-area">Time &amp; Energy</div>
+        <div class="stars" data-key="timeenergy"></div>
+        <div class="score-val" id="val-timeenergy">— / 5</div>
+      </div>
+      <div style="margin-top:16px;">
+        <div class="field-label" style="margin-bottom:6px;">The biggest gap is</div>
+        <input type="text" id="s5gap" placeholder="Name what needs the most attention right now..." />
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 6 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">6</div>
+      <div>
+        <div class="section-label">Section Six</div>
+        <div class="section-title">My First Bridge</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="bridge-item">
+        <div class="bridge-label">The bridge I am building is</div>
+        <input type="text" id="s6a" placeholder="Name the bridge..." />
+      </div>
+      <div class="bridge-item">
+        <div class="bridge-label">This bridge supports me by</div>
+        <input type="text" id="s6b" placeholder="How it serves you..." />
+      </div>
+      <div class="bridge-item">
+        <div class="bridge-label">The smallest version is</div>
+        <input type="text" id="s6c" placeholder="Tiny, true, doable..." />
+      </div>
+      <div class="bridge-item">
+        <div class="bridge-label">I will test it by</div>
+        <input type="text" id="s6d" placeholder="A date or moment..." />
+      </div>
+      <div class="bridge-item">
+        <div class="bridge-label">I will know it worked if</div>
+        <input type="text" id="s6e" placeholder="What evidence will you look for..." />
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn-dl" onclick="downloadLab()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download My Lab
+    </button>
+    <button class="btn-reset" onclick="resetLab()">Start Over</button>
+  </div>
+
+  <div class="footer">
+    Built on <em>The Incandescent Method™</em> &nbsp;·&nbsp; © Olivier Expressions
+  </div>
+
+</div>
+
+<script>
+  const scores = { self:0, business:0, environment:0, relationships:0, timeenergy:0 };
+
+  document.querySelectorAll('.stars[data-key]').forEach(container => {
+    const key = container.dataset.key;
+    for (let n = 1; n <= 5; n++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.dataset.val = n;
+      s.textContent = n;
+      s.onclick = () => {
+        scores[key] = n;
+        container.querySelectorAll('.star').forEach(x => x.classList.toggle('on', +x.dataset.val <= n));
+        document.getElementById('val-' + key).textContent = n + ' / 5';
+      };
+      container.appendChild(s);
+    }
+  });
+
+  function resetLab() {
+    document.querySelectorAll('textarea, input[type="text"]').forEach(el => el.value = '');
+    Object.keys(scores).forEach(k => {
+      scores[k] = 0;
+      const c = document.querySelector('.stars[data-key="' + k + '"]');
+      if (c) c.querySelectorAll('.star').forEach(s => s.classList.remove('on'));
+      const v = document.getElementById('val-' + k);
+      if (v) v.textContent = '— / 5';
+    });
+  }
+
+  function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function getTobes() { return Array.from(document.querySelectorAll('.tobe')).map(i => i.value.trim()).filter(Boolean); }
+
+  function downloadLab() {
+    const gold='#C9A84C', ch='#1C1C1A', mid='#5A5750', pale='#FAF6EC', bdr='#DDD9CE', gbdr='#E8D49A', lm='#9A9690';
+    const areaLabels = { self:'Self', business:'Business', environment:'Environment', relationships:'Relationships', timeenergy:'Time & Energy' };
+
+    function field(label, value) {
+      return `<div style="margin-bottom:13px;">
+        <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:${lm};font-family:'DM Sans',sans-serif;margin-bottom:4px;">${label}</div>
+        <div style="background:${pale};border:0.5px solid ${gbdr};border-radius:10px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:${ch};font-weight:300;line-height:1.6;min-height:32px;white-space:pre-wrap;">${value || '—'}</div>
+      </div>`;
+    }
+
+    function sec(num, label, title, content) {
+      return `<div style="margin-bottom:22px;background:#fff;border:0.5px solid ${bdr};border-radius:14px;overflow:hidden;">
+        <div style="background:${ch};padding:12px 18px;display:flex;align-items:center;gap:10px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:${pale};border:1px solid ${gbdr};display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;color:${gold};flex-shrink:0;">${num}</div>
+          <div>
+            <div style="font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:${gold};font-family:'DM Sans',sans-serif;">${label}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:#fff;">${title}</div>
+          </div>
+        </div>
+        <div style="padding:16px 18px;">${content}</div>
+      </div>`;
+    }
+
+    const tobes = getTobes();
+    const tobeHtml = tobes.length
+      ? tobes.map(t => `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:${gold};width:36px;flex-shrink:0;">I am</span><div style="flex:1;background:${pale};border:0.5px solid ${gbdr};border-radius:10px;padding:9px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:${ch};font-weight:300;">${t}</div></div>`).join('')
+      : `<div style="color:${lm};font-size:13px;font-style:italic;">No statements entered.</div>`;
+
+    const scoresHtml = Object.entries(areaLabels).map(([k, lbl]) => {
+      const sc = scores[k];
+      const dots = [1,2,3,4,5].map(n => `<span style="display:inline-block;width:18px;height:18px;border-radius:5px;background:${n<=sc?gold:pale};border:0.5px solid ${gbdr};margin-right:3px;"></span>`).join('');
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="font-size:13px;color:${mid};width:100px;flex-shrink:0;font-family:'DM Sans',sans-serif;">${lbl}</div><div>${dots}</div><div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:${gold};margin-left:6px;">${sc||'—'} / 5</div></div>`;
+    }).join('');
+
+    const s1 = sec('1','Section One','My Tuesday Revelation', field('What did I realize, see, feel, or no longer want to ignore?', v('s1')));
+    const s2 = sec('2','Section Two','My To-Be List', `<div style="font-size:11px;color:${lm};font-style:italic;margin-bottom:10px;">This week, I am choosing to be…</div>${tobeHtml}`);
+    const s3 = sec('3','Section Three','My Daily To-Be System', `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">${field('Where my list will live',v('s3a'))}${field('When I will check it',v('s3b'))}</div>${field('My morning prompt',v('s3c'))}${field('My evening evidence prompt',v('s3d'))}`);
+    const s4 = sec('4','Section Four','My Next Instead', `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">${field('Instead of',v('s4a'))}${field('I want',v('s4b'))}</div>`);
+    const s5 = sec('5','Section Five','My Gentle Gap Scan', `${scoresHtml}<div style="margin-top:10px;">${field('The biggest gap is',v('s5gap'))}</div>`);
+    const s6 = sec('6','Section Six','My First Bridge', `${field('The bridge I am building is',v('s6a'))}${field('This bridge supports me by',v('s6b'))}${field('The smallest version is',v('s6c'))}${field('I will test it by',v('s6d'))}${field('I will know it worked if',v('s6e'))}`);
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Week 1 Lab — My To-Be System</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'DM Sans',sans-serif;background:#FDFCF9;padding:40px 32px;max-width:640px;margin:0 auto;}@media print{body{padding:0;}@page{margin:1.2cm 1.4cm;}}</style>
+</head><body>
+<div style="background:${ch};border-radius:14px 14px 0 0;padding:10px 20px;text-align:center;font-family:'Cormorant Garamond',serif;color:${gold};font-size:11px;letter-spacing:3.5px;text-transform:uppercase;">Incandescent Founders™ — Week 1 Lab</div>
+<div style="background:${ch};padding:28px 24px 24px;text-align:center;margin-bottom:28px;">
+  <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:${gold};font-family:'DM Sans',sans-serif;margin-bottom:8px;">Week 1 — Identity Lab</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:#fff;margin-bottom:4px;">My To-Be System + <span style="color:${gold};font-style:italic;">First Instead Bridge</span></div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:#9A9690;">Who I am choosing to be — and how I begin to live from it.</div>
+</div>
+${s1}${s2}${s3}${s4}${s5}${s6}
+<div style="text-align:center;border-top:0.5px solid ${bdr};padding-top:16px;margin-top:8px;font-size:11px;color:${lm};">Built on <span style="font-family:'Cormorant Garamond',serif;color:${gold};font-style:italic;font-size:13px;">The Incandescent Method™</span> · © Olivier Expressions</div>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(() => win.print(), 700);
+  }
+</script>
+</body>
+</html>
